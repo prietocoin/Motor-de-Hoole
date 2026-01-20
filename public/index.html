@@ -2,8 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HOO | Monitor Dólar Pro V4.4</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>HOO Monitor</title>
+    <!-- PWA / Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HOO">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="HOO">
+    <meta name="theme-color" content="#050608">
+    <!-- Favicon & Icons (Using Embedded SVG for maximum compatibility) -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23050608' stroke='%23e2b053' stroke-width='2'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='12' fill='white'/><circle cx='65' cy='50' r='12' fill='white'/><circle cx='35' cy='50' r='5' fill='%23050608'/><circle cx='65' cy='50' r='5' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='15' fill='white'/><circle cx='65' cy='50' r='15' fill='white'/><circle cx='35' cy='50' r='6' fill='%23050608'/><circle cx='65' cy='50' r='6' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>">
+    <!-- App Manifest (Embedded via Blob in script for single-file deployment) -->
+    <link rel="manifest" id="manifest-placeholder">
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;600;700;800&display=swap"
@@ -29,6 +44,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            padding-top: env(safe-area-inset-top);
         }
         @media (min-width: 1024px) {
             body {
@@ -173,7 +189,6 @@
             color: var(--accent-gold);
             transform: translateY(-2px);
         }
-        /* Mejora para PC: Contenedor centralizado */
         .main-container {
             width: 100%;
             max-width: 1200px;
@@ -183,13 +198,11 @@
             display: flex;
             flex-direction: column;
         }
-        /* Prevent overlap by adjusting coordinates */
         .gauge-info-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) translateY(-10px);
-            /* Ajustado para centrar mejor */
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -212,18 +225,19 @@
         <p class="text-[9px] text-white/30 uppercase tracking-[0.6em] mt-2">DÓLAR MONITOR ELITE</p>
         <button onclick="startApp()"
             class="mt-14 px-12 py-4 glass-card font-black text-xs gold-text uppercase tracking-[0.2em] active:scale-95 transition-all">Sincronizar
-            Datos</button>
+            App</button>
     </div>
     <div class="ticker-bar shrink-0">
         <div class="ticker-content">
-            /// NODO HOO ACTIVADO /// MONITOREO MINUTO A MINUTO /// ESTADO: SEGURO SINCRONIZADO /// TASA BCV Y BINANCE
-            P2P VERIFICADA ///
+            /// NODO HOO ACTIVADO /// MONITOREO MINUTO A MINUTO /// ESTADO: APP SINCRONIZADA /// TASA BCV Y BINANCE P2P
+            VERIFICADA ///
         </div>
     </div>
     <div class="main-container">
         <header class="pt-5 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 glass-card flex items-center justify-center border-white/5">
+                <div
+                    class="w-12 h-12 glass-card flex items-center justify-center border-white/5 shadow-gold-500/10 shadow-lg">
                     <svg width="30" height="30" viewBox="0 0 100 100" fill="none">
                         <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="6"
                             stroke-linecap="round" stroke-linejoin="round" />
@@ -234,7 +248,7 @@
                         <polygon points="50,60 44,68 50,76 56,68" fill="var(--accent-gold)" />
                     </svg>
                 </div>
-                <div>
+                <div class="hidden sm:block">
                     <h2 class="font-rajdhani text-2xl font-bold tracking-widest text-white leading-none"><span
                             class="gold-h">H</span>OO</h2>
                     <p class="text-[8px] gold-text font-black uppercase tracking-[0.3em] mt-1.5 leading-none">DÓLAR
@@ -261,7 +275,6 @@
             </div>
         </header>
         <main class="flex-1 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 py-6 overflow-hidden">
-            <!-- Central Gauge Area -->
             <div class="relative flex items-center justify-center shrink-0">
                 <svg width="240" height="240" viewBox="0 0 160 160"
                     class="transform -rotate-90 gauge-svg scale-110 sm:scale-125 lg:scale-150">
@@ -269,9 +282,7 @@
                     <circle id="gap-arc" class="gauge-progress" cx="80" cy="80" r="70" />
                     <circle class="gauge-segments" cx="80" cy="80" r="70" />
                 </svg>
-                <!-- Info Overlay Adjusted to prevent overlap -->
                 <div class="gauge-info-overlay">
-                    <!-- Badge moved slightly higher to be CLEAR of the gauge arcs -->
                     <span class="badge-premium mb-6 lg:mb-10">DIFERENCIAL</span>
                     <span id="brecha"
                         class="font-rajdhani text-5xl lg:text-7xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
@@ -284,7 +295,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Indicator & Social Column for PC / Grid for Mobile -->
             <div class="w-full max-w-sm lg:max-w-md flex flex-col gap-4">
                 <div class="grid grid-cols-2 lg:grid-cols-1 gap-4">
                     <div class="glass-card p-4 lg:p-6 space-y-3 border-white/5">
@@ -322,7 +332,6 @@
                             </svg></div>
                     </div>
                 </div>
-                <!-- Footer-style Card for Desktop / Social Box for Mobile -->
                 <div class="glass-card p-4 lg:p-6 flex items-center justify-between border-white/5">
                     <div class="flex flex-col">
                         <span
@@ -386,6 +395,35 @@
             </svg><span>PERFIL</span></div>
     </nav>
     <script>
+        // --- PWA SECRETS: MANIFEST & ICONS ---
+        (function setupPWA() {
+            const myManifest = {
+                "name": "HOO Monitor Dólar",
+                "short_name": "HOO",
+                "start_url": ".",
+                "display": "standalone",
+                "background_color": "#050608",
+                "theme_color": "#050608",
+                "icons": [
+                    {
+                        "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><circle cx='50' cy='50' r='40' stroke='%23e2b053' stroke-width='2' fill='none'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='12' fill='white'/><circle cx='65' cy='50' r='12' fill='white'/><circle cx='35' cy='50' r='5' fill='%23050608'/><circle cx='65' cy='50' r='5' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>",
+                        "sizes": "192x192",
+                        "type": "image/svg+xml",
+                        "purpose": "any maskable"
+                    },
+                    {
+                        "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='15' fill='white'/><circle cx='65' cy='50' r='15' fill='white'/><circle cx='35' cy='50' r='6' fill='%23050608'/><circle cx='65' cy='50' r='6' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>",
+                        "sizes": "512x512",
+                        "type": "image/svg+xml"
+                    }
+                ]
+            };
+            const stringManifest = JSON.stringify(myManifest);
+            const blob = new Blob([stringManifest], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(blob);
+            document.querySelector('#manifest-placeholder').setAttribute('href', manifestURL);
+        })();
+        // --- APP LOGIC ---
         let lastId = null;
         let lastPriceUsdt = localStorage.getItem('last_usdt') || null;
         let lastPriceBcv = localStorage.getItem('last_bcv') || null;
@@ -411,9 +449,8 @@
                 if (!d || !d.id) return;
                 const bcvNum = parseFloat(String(d.precio_bcv).replace(',', '.'));
                 const usdtNum = parseFloat(String(d.precio_usdt).replace(',', '.'));
-                if (lastPriceUsdt) {
-                    const diffUsdt = Math.abs((usdtNum - lastPriceUsdt) / lastPriceUsdt) * 100;
-                    if (diffUsdt > 2 && !isMuted) alertSound.play().catch(() => { });
+                if (lastPriceUsdt && Math.abs((usdtNum - lastPriceUsdt) / lastPriceUsdt) * 100 > 2 && !isMuted) {
+                    alertSound.play().catch(() => { });
                 }
                 if (lastPriceUsdt && lastPriceBcv) {
                     const varUsdt = ((usdtNum - lastPriceUsdt) / lastPriceUsdt) * 100;
@@ -423,15 +460,12 @@
                     document.getElementById('var-bcv').innerText = (varBcv >= 0 ? '+' : '') + varBcv.toFixed(2) + '%';
                     document.getElementById('var-bcv').style.color = varBcv >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
                 }
-                lastPriceUsdt = usdtNum;
-                lastPriceBcv = bcvNum;
-                localStorage.setItem('last_usdt', usdtNum);
-                localStorage.setItem('last_bcv', bcvNum);
+                lastPriceUsdt = usdtNum; lastPriceBcv = bcvNum;
+                localStorage.setItem('last_usdt', usdtNum); localStorage.setItem('last_bcv', bcvNum);
                 document.getElementById('bcv').innerText = d.precio_bcv;
                 document.getElementById('usdt').innerText = d.precio_usdt;
                 document.getElementById('brecha').innerText = d.brecha_porcentaje;
-                const gapDiff = (usdtNum - bcvNum).toFixed(2);
-                document.getElementById('brecha-bs').innerText = `Bs. ${gapDiff}`;
+                document.getElementById('brecha-bs').innerText = `Bs. ${(usdtNum - bcvNum).toFixed(2)}`;
                 const gapVal = parseFloat(String(d.brecha_porcentaje).replace(',', '.').replace('%', ''));
                 document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(gapVal, 35) / 35);
             } catch (e) { console.error("Update Fail"); }
