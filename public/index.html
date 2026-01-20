@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hoole | Premium Gap Monitor</title>
+    <title>Hoole | Premium Gap Monitor V3.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -21,13 +21,12 @@
             background-color: var(--bg-main);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        /* Degradados de fondo sutiles */
         body::before {
             content: "";
             position: fixed;
@@ -50,7 +49,6 @@
         .green-text {
             color: var(--accent-green);
         }
-        /* Tacómetro */
         .gauge-bg {
             fill: none;
             stroke: rgba(255, 255, 255, 0.03);
@@ -65,7 +63,6 @@
             filter: drop-shadow(0 0 10px var(--accent-green));
             transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* Gráficos Sparkline */
         .sparkline {
             fill: none;
             stroke: var(--accent-green);
@@ -77,7 +74,6 @@
             stroke: rgba(255, 255, 255, 0.4);
             filter: none;
         }
-        /* Barra de Navegación */
         .nav-bar {
             background: rgba(18, 20, 24, 0.85);
             backdrop-filter: blur(20px);
@@ -86,7 +82,7 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 0 20px;
+            padding-bottom: env(safe-area-inset-bottom);
         }
         .nav-item {
             display: flex;
@@ -95,7 +91,6 @@
             gap: 6px;
             color: var(--text-secondary);
             opacity: 0.6;
-            transition: 0.3s;
         }
         .nav-item.active {
             color: var(--accent-green);
@@ -106,17 +101,27 @@
             position: fixed;
             inset: 0;
             background: var(--bg-main);
-            z-index: 100;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: 0.8s ease;
+            transition: 0.5s ease;
+        }
+        .loading-spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Pantalla de Inicio -->
     <div id="splash">
         <div class="glass-panel p-12 max-w-sm text-center">
             <div
@@ -128,31 +133,26 @@
                 </svg>
             </div>
             <h1 class="text-3xl font-extrabold mb-2 tracking-tight">Hoole <span class="gold-text">Premium</span></h1>
-            <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.3em] font-bold">Terminal de Monitoreo V3.0
-            </p>
-            <button onclick="startApp()"
-                class="w-full py-5 bg-gradient-to-r from-[#e2b053] to-[#ffb347] text-black font-bold text-lg rounded-2xl shadow-[0_10px_25px_rgba(226,176,83,0.4)] transition-transform active:scale-95">INICIAR
+            <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.3em] font-bold">Terminal Gold V3.1</p>
+            <button id="startBtn" onclick="startApp()"
+                class="w-full py-5 bg-gradient-to-r from-[#e2b053] to-[#ffb347] text-black font-bold text-lg rounded-2xl shadow-[0_10px_25px_rgba(226,176,83,0.4)]">CONECTAR
                 MONITOR</button>
         </div>
     </div>
-    <!-- Header -->
-    <header class="pt-10 px-10 flex justify-between items-center">
+    <header class="pt-8 px-8 flex justify-between items-center shrink-0">
         <span class="text-xl font-bold tracking-tight text-white">Hoole: <span class="gold-text">Gap
                 Monitor</span></span>
-        <div class="flex gap-4">
-            <button onclick="sync()"
-                class="p-2.5 bg-white/5 rounded-full border border-white/10 text-white/50 hover:text-white transition-colors">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                    <path d="M21 3v5h-5" />
-                </svg>
-            </button>
-        </div>
+        <button onclick="sync()"
+            class="p-2.5 bg-white/5 rounded-full border border-white/10 text-white/50 hover:text-white transition-colors">
+            <svg id="syncIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+            </svg>
+        </button>
     </header>
-    <!-- Main -->
-    <main class="flex-1 flex flex-col items-center justify-center px-10 space-y-10 overflow-y-auto pb-32 pt-6">
-        <!-- Gran Tacómetro -->
-        <div class="relative flex items-center justify-center scale-110">
+    <main class="flex-1 flex flex-col items-center justify-center px-6 space-y-10 overflow-y-auto pb-32">
+        <div class="relative flex items-center justify-center scale-90 sm:scale-100">
             <svg width="240" height="240" viewBox="0 0 160 160" class="transform -rotate-90">
                 <circle class="gauge-bg" cx="80" cy="80" r="70" />
                 <circle id="gap-arc" class="gauge-fill" cx="80" cy="80" r="70" stroke-dasharray="440"
@@ -163,9 +163,8 @@
                 <p class="text-[9px] text-white/30 font-bold uppercase tracking-[0.4em] mt-2">THE GAP</p>
             </div>
         </div>
-        <!-- Cards -->
-        <div class="w-full grid grid-cols-2 gap-5">
-            <div class="glass-panel p-6 space-y-4">
+        <div class="w-full grid grid-cols-2 gap-4 max-w-lg">
+            <div class="glass-panel p-5 space-y-4">
                 <div class="flex items-center gap-2">
                     <div class="p-1.5 bg-[#e2b053]/10 rounded-lg text-[#e2b053]">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -184,7 +183,7 @@
                     <path class="sparkline" d="M0,25 Q15,5 30,20 T60,10 T100,22" />
                 </svg>
             </div>
-            <div class="glass-panel p-6 space-y-4">
+            <div class="glass-panel p-5 space-y-4">
                 <div class="flex items-center gap-2">
                     <div class="p-1.5 bg-white/10 rounded-lg text-white/60">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -204,8 +203,7 @@
                 </svg>
             </div>
         </div>
-        <!-- Trend Card -->
-        <div class="w-full glass-panel p-6 space-y-5">
+        <div class="w-full glass-panel p-6 space-y-5 max-w-lg">
             <div class="flex justify-between items-center">
                 <span class="text-[10px] text-white/50 font-black uppercase tracking-widest">24H GAP TREND</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)"
@@ -231,17 +229,16 @@
             </div>
         </div>
     </main>
-    <!-- Nav -->
-    <nav class="nav-bar fixed bottom-0 left-0 right-0">
+    <nav class="nav-bar fixed bottom-0 left-0 right-0 shrink-0">
         <div class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
             </svg>
             <span class="text-[8px] font-bold uppercase tracking-widest">Home</span>
         </div>
         <div class="nav-item active">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="18" height="18" x="3" y="3" rx="2" />
                 <line x1="12" x2="12" y1="20" y2="10" />
                 <line x1="18" x2="18" y1="20" y2="4" />
@@ -250,14 +247,14 @@
             <span class="text-[8px] font-bold uppercase tracking-widest">Monitor</span>
         </div>
         <div class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="20" height="14" x="2" y="5" rx="2" />
                 <line x1="2" x2="22" y1="10" y2="10" />
             </svg>
             <span class="text-[8px] font-bold uppercase tracking-widest">Wallet</span>
         </div>
         <div class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
             </svg>
@@ -271,24 +268,43 @@
             setTimeout(() => {
                 document.getElementById('splash').style.visibility = 'hidden';
                 sync();
-            }, 800);
+            }, 500);
         }
         async function sync() {
+            const icon = document.getElementById('syncIcon');
+            icon.classList.add('loading-spin');
             try {
-                const r = await fetch('/api/market-data');
+                // Intentamos múltiples rutas comunes
+                let r;
+                try {
+                    r = await fetch('/api/market-data');
+                } catch {
+                    r = await fetch('/precio-actual');
+                }
+                if (!r.ok) throw new Error('Network error');
                 const result = await r.json();
-                const d = result.analisis || result;
-                if (lastId !== null && d.id === lastId) return;
-                lastId = d.id;
-                const bcv = d.precio_bcv || d.precio_pivote_bcv;
-                const usdt = d.precio_usdt || d.precio_paralelo_usdt;
+                // Parseo inteligente: Maneja arrays de n8n o objetos directos
+                const d = Array.isArray(result) ? result[0] : (result.analisis || result);
+                if (!d) return;
+                const currentId = d.id || JSON.stringify(d);
+                if (lastId === currentId) {
+                    icon.classList.remove('loading-spin');
+                    return;
+                }
+                lastId = currentId;
+                const bcv = d.precio_bcv || d.precio_pivote_bcv || '--,--';
+                const usdt = d.precio_usdt || d.precio_paralelo_usdt || '--,--';
+                const gap = d.brecha_porcentaje || '0';
                 document.getElementById('bcv').innerText = bcv;
                 document.getElementById('usdt').innerText = usdt;
-                document.getElementById('brecha').innerText = d.brecha_porcentaje + "%";
-                const gapNum = parseFloat(d.brecha_porcentaje.replace(',', '.'));
-                // Rango de 0% a 25% para el tacómetro
+                document.getElementById('brecha').innerText = gap + "%";
+                const gapNum = parseFloat(gap.replace(',', '.'));
                 document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(gapNum, 25) / 25);
-            } catch (e) { console.log("Reconectando..."); }
+            } catch (e) {
+                console.error("Fallo de conexión:", e);
+            } finally {
+                setTimeout(() => icon.classList.remove('loading-spin'), 1000);
+            }
         }
         setInterval(sync, 30000);
     </script>
