@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HOO Smart Monitor V6.0</title>
+    <title>HOO Smart Monitor V6.0 - Jairokov Systems</title>
+    <!-- Meta Tags PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="HOO">
     <meta name="theme-color" content="#050608">
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23050608' stroke='%23e2b053' stroke-width='2'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='12' fill='white'/><circle cx='65' cy='50' r='12' fill='white'/><circle cx='35' cy='50' r='5' fill='%23050608'/><circle cx='65' cy='50' r='5' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>">
-    <link rel="apple-touch-icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='15' fill='white'/><circle cx='65' cy='50' r='15' fill='white'/><circle cx='35' cy='50' r='6' fill='%23050608'/><circle cx='65' cy='50' r='6' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>">
-    <link rel="manifest" id="manifest-placeholder">
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;600;700;800&display=swap"
@@ -21,68 +17,52 @@
     <style>
         :root {
             --bg-deep: #050608;
-            --bg-card: rgba(18, 20, 24, 0.7);
+            --bg-card: #121415;
             --accent-gold: #e2b053;
-            --accent-gold-glow: rgba(226, 176, 83, 0.3);
+            --accent-gold-glow: rgba(226, 176, 83, 0.4);
             --accent-green: #00d49a;
             --accent-red: #ff4b4b;
-            --glass-border: rgba(255, 255, 255, 0.05);
             --text-dim: #64748b;
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         body {
             background-color: var(--bg-deep);
             color: white;
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            margin: 0;
+            padding: 0;
             height: 100vh;
-            width: 100vw;
             display: flex;
             flex-direction: column;
-            position: relative;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(226, 176, 83, 0.08) 0%, transparent 60%);
-            z-index: -1;
-        }
-        /* Escalado Global para evitar Scroll */
-        .ui-scaler {
-            transform: scale(0.85);
-            transform-origin: top center;
-            height: 117.6%;
-            /* Compensa el scale(0.85) -> 1/0.85 */
-            width: 117.6%;
-            position: absolute;
-            left: -8.8%;
-            top: 26px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            overflow: hidden;
         }
         .font-rajdhani {
             font-family: 'Rajdhani', sans-serif;
         }
-        .ticker-bar {
+        /* Banner de Marketing Dinámico */
+        .marketing-banner {
             background: rgba(0, 0, 0, 0.9);
-            border-bottom: 1px solid var(--glass-border);
-            height: 22px;
+            border-bottom: 1px solid rgba(226, 176, 83, 0.2);
+            height: 28px;
             display: flex;
             align-items: center;
             overflow: hidden;
             z-index: 100;
         }
-        .ticker-content {
+        .marketing-content {
             white-space: nowrap;
-            animation: moveTicker 45s linear infinite;
+            display: inline-block;
+            animation: moveBanner 40s linear infinite;
             color: var(--accent-gold);
-            font-size: 7px;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
         }
-        @keyframes moveTicker {
+        @keyframes moveBanner {
             0% {
                 transform: translateX(100%);
             }
@@ -90,84 +70,113 @@
                 transform: translateX(-100%);
             }
         }
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
+        /* Tacómetro de Segmentos (Basado en Imagen 1) */
+        .gauge-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
         }
         .gauge-svg {
             filter: drop-shadow(0 0 15px var(--accent-gold-glow));
+            transform: rotate(-90deg);
         }
-        .gauge-bg {
+        .gauge-segment-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.01);
-            stroke-width: 8;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 12;
+            stroke-dasharray: 4 2;
+            /* Crea los bloques */
         }
-        .gauge-progress {
+        .gauge-segment-progress {
             fill: none;
             stroke: var(--accent-gold);
-            stroke-width: 9;
-            stroke-linecap: round;
-            stroke-dasharray: 440;
+            stroke-width: 12;
+            stroke-dasharray: 4 2;
             stroke-dashoffset: 440;
             transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
+            stroke-linecap: butt;
         }
-        #banner-alerta {
-            position: fixed;
-            top: 22px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 90;
-            background: linear-gradient(90deg, #ff4b4b, #8b0000);
-            color: white;
-            padding: 3px 15px;
-            border-radius: 0 0 8px 8px;
-            font-size: 8px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            display: none;
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: transform 0.3s;
         }
-        .status-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            display: inline-block;
-            margin-right: 4px;
-            box-shadow: 0 0 6px var(--accent-green);
-        }
-        .status-dot.fixed {
-            background: var(--text-dim);
-            box-shadow: none;
-        }
-        .social-link {
-            transition: all 0.2s;
-            color: var(--text-dim);
-        }
-        .social-link:hover {
+        .gold-h {
             color: var(--accent-gold);
         }
+        /* Sparkline (Basado en Imagen 1) */
+        .sparkline {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px rgba(0, 212, 154, 0.4));
+        }
+        /* Branding Footer (Imagen 1) */
+        .social-btn {
+            color: var(--text-dim);
+            transition: 0.3s;
+        }
+        .social-btn:hover {
+            color: var(--accent-gold);
+        }
+        /* Nav Bar Compacta */
         .nav-bar {
-            background: rgba(5, 6, 8, 0.95);
-            border-top: 1px solid var(--glass-border);
-            height: 60px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            background: #050608;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            height: 65px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-dim);
+            font-size: 8px;
+            font-weight: 800;
+        }
+        .nav-item.active {
+            color: white;
+        }
+        #alert-notification {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-red);
+            color: white;
+            padding: 4px 15px;
+            font-size: 9px;
+            font-weight: 900;
+            border-radius: 0 0 10px 10px;
+            z-index: 200;
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        @media (max-height: 700px) {
+            .gauge-container {
+                transform: scale(0.9);
+                padding: 5px 0;
+            }
+            .cards-container {
+                margin-top: -10px !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Splash Screen -->
     <div id="splash"
-        style="position: fixed; inset: 0; background: var(--bg-deep); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.6s;">
-        <svg class="owl-logo-premium" width="80" height="80" viewBox="0 0 100 100" fill="none">
+        style="position: fixed; inset: 0; background: #050608; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.6s;">
+        <svg width="80" height="80" viewBox="0 0 100 100">
             <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="5"
                 stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="35" cy="50" r="11" fill="white" />
@@ -176,23 +185,26 @@
             <circle cx="65" cy="50" r="4.5" fill="#050608" />
             <polygon points="50,60 43,69 50,78 57,69" fill="var(--accent-gold)" />
         </svg>
-        <h1 class="mt-6 font-rajdhani text-3xl font-bold tracking-[0.4em]"><span class="gold-h">H</span>OO</h1>
+        <h1 class="mt-6 font-rajdhani text-3xl font-bold tracking-[0.4em] text-white"><span class="gold-h">H</span>OO
+        </h1>
         <button onclick="startApp()"
-            class="mt-12 px-12 py-4 glass-card font-black text-xs gold-text uppercase tracking-[0.2em] outline-none">Conectar</button>
+            class="mt-12 px-12 py-3 glass-card font-black text-[10px] gold-h border-gold-500/20 uppercase tracking-[0.3em]">Conectar</button>
     </div>
-    <!-- Ticker Bar -->
-    <div class="ticker-bar shrink-0">
-        <div class="ticker-content">
-            /// HOO SMART V6.0 /// DISEÑO COMPACTO MINIMALISTA /// BRUJA DE TENDENCIA ACTIVA /// CALIBRACIÓN EN TIEMPO
-            REAL ///
+    <!-- Marketing Banner / Titulares -->
+    <div class="marketing-banner">
+        <div class="marketing-content" id="banner-text">
+            /// JAIROKOV SYSTEMS: AUTOMATIZACIONES CON INTELIGENCIA ARTIFICIAL /// SISTEMAS PARA EMPRENDEDORES Y PYMES
+            /// HOO MONITOR: PRECISIÓN TOTAL SIN OCR /// TENDENCIAS DEL MERCADO EN TIEMPO REAL ///
         </div>
     </div>
-    <div id="banner-alerta">⚠️ ALERTA: VOLATILIDAD</div>
-    <div class="ui-scaler">
-        <header class="w-full max-w-4xl px-8 flex justify-between items-center py-4">
+    <!-- Alertas -->
+    <div id="alert-notification">⚠️ ALERTA: MOVIMIENTO VOLÁTIL</div>
+    <div class="flex-1 flex flex-col container mx-auto max-w-lg px-6">
+        <!-- Header (Imagen 1) -->
+        <header class="pt-6 flex justify-between items-start">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 glass-card flex items-center justify-center border-white/5">
-                    <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+                <div class="w-11 h-11 glass-card flex items-center justify-center border-white/5 shadow-xl">
+                    <svg width="24" height="24" viewBox="0 0 100 100">
                         <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="6"
                             stroke-linecap="round" stroke-linejoin="round" />
                         <circle cx="35" cy="50" r="10" fill="white" />
@@ -203,105 +215,146 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="font-rajdhani text-xl font-bold tracking-widest text-white leading-none">HOO</h2>
-                    <p class="text-[7px] gold-text font-black uppercase tracking-[0.2em] mt-1 leading-none">SMART
-                        MONITOR</p>
+                    <h2 class="font-rajdhani text-2xl font-bold tracking-widest text-white leading-none"><span
+                            class="gold-h">H</span>OO</h2>
+                    <p class="text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mt-1.5">DÓLAR MONITOR</p>
                 </div>
             </div>
             <div class="flex gap-2">
-                <button id="muteBtn" onclick="toggleMute()"
-                    class="w-10 h-10 glass-card flex items-center justify-center text-white/20"><i
+                <button onclick="toggleMute()" id="muteBtn"
+                    class="w-10 h-10 glass-card flex items-center justify-center text-white/30"><i
                         data-lucide="volume-2" class="w-4 h-4"></i></button>
-                <button onclick="sync()" class="w-10 h-10 glass-card flex items-center justify-center text-white/20"><i
+                <button onclick="sync()" class="w-10 h-10 glass-card flex items-center justify-center text-white/30"><i
                         data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i></button>
             </div>
         </header>
-        <!-- Tacómetro Central -->
-        <div class="relative flex items-center justify-center my-4">
-            <svg width="220" height="220" viewBox="0 0 160 160" class="transform -rotate-90 gauge-svg">
-                <circle class="gauge-bg" cx="80" cy="80" r="70" />
-                <circle id="gap-arc" class="gauge-progress" cx="80" cy="80" r="70" />
+        <!-- Tacómetro Segmentado (Casi idéntico a Imagen 1) -->
+        <div class="gauge-container">
+            <svg width="210" height="210" viewBox="0 0 160 160" class="gauge-svg">
+                <circle class="gauge-segment-bg" cx="80" cy="80" r="70" />
+                <circle id="gauge-arc" class="gauge-segment-progress" cx="80" cy="80" r="70" />
             </svg>
-            <div
-                style="position: absolute; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; top: 50%; transform: translateY(-50%);">
-                <span class="badge-premium mb-4" style="font-size: 7px; padding: 3px 10px;">DIFERENCIA</span>
-                <span id="brecha"
-                    class="font-rajdhani text-6xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
-                <div class="mt-4 flex flex-col items-center pt-2 border-t border-white/5 w-32">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span
+                    style="font-size: 8px; color: var(--accent-gold); font-weight: 800; letter-spacing: 2px; margin-bottom: 5px; opacity: 0.6;">DIFERENCIAL</span>
+                <span id="brecha-porc"
+                    class="font-rajdhani text-5xl font-extrabold tracking-tighter leading-none">--%</span>
+                <div class="mt-6 flex flex-col items-center pt-2 border-t border-white/10 w-32">
                     <span id="brecha-bs" class="text-sm font-bold text-white/90">Bs. --,--</span>
-                    <span class="text-[8px] text-white/20 uppercase font-black tracking-[0.3em] mt-1">BRECHA EN
-                        BS.</span>
+                    <span
+                        style="font-size: 7px; color: white; opacity: 0.2; font-weight: 900; letter-spacing: 2px; margin-top: 4px;">BRECHA
+                        NETA</span>
                 </div>
             </div>
         </div>
-        <!-- Fila de 3 Tarjetas Minimalistas DEBAJO del tacómetro -->
-        <div class="w-full max-w-4xl grid grid-cols-3 gap-4 px-8 mt-2">
-            <!-- Binance -->
-            <div class="glass-card p-4 text-center">
-                <div class="flex justify-center items-center gap-1 mb-2">
-                    <span id="dot-binance" class="status-dot"></span>
-                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">USDTVES</span>
+        <!-- Tarjetas de Precios (Imagen 1 Style) -->
+        <div class="cards-container grid grid-cols-2 gap-4 mt-2">
+            <!-- Binance P2P -->
+            <div class="glass-card p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[8px] font-bold text-white/30 tracking-widest uppercase">BINANCE P2P</span>
+                    <span id="var-usdt" class="text-[8px] font-black text-green-500">+0.00%</span>
                 </div>
-                <h3 id="usdt" class="font-rajdhani text-2xl font-bold gold-text leading-none">--,--</h3>
-                <span id="var-usdt" class="text-[8px] font-bold text-green-500 mt-1 block">+0.00%</span>
+                <div class="flex items-baseline gap-1">
+                    <span id="usdt" class="font-rajdhani text-3xl font-bold">--,--</span>
+                </div>
+                <p class="text-[7px] text-white/20 mt-1">VES / USDT</p>
+                <div class="h-6 mt-3">
+                    <svg viewBox="0 0 100 20" class="w-full h-full">
+                        <path class="sparkline" d="M0,15 Q20,5 40,15 T70,5 T100,10" />
+                    </svg>
+                </div>
             </div>
-            <!-- BCV USD -->
-            <div class="glass-card p-4 text-center">
-                <div class="flex justify-center items-center gap-1 mb-2">
-                    <span class="status-dot fixed"></span>
-                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">BCV USD</span>
+            <!-- Oficial BCV -->
+            <div class="glass-card p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[8px] font-bold text-white/30 tracking-widest uppercase">OFICIAL BCV</span>
+                    <span class="text-[8px] font-black text-white/40">+0.00%</span>
                 </div>
-                <h3 id="bcv" class="font-rajdhani text-2xl font-bold text-white/70 leading-none">--,--</h3>
-                <span class="text-[7px] text-white/10 font-bold uppercase mt-1 block">Oficial</span>
+                <div class="flex items-baseline gap-1">
+                    <span id="bcv" class="font-rajdhani text-3xl font-bold">--,--</span>
+                </div>
+                <p class="text-[7px] text-white/20 mt-1">VES / BCV</p>
+                <div class="h-6 mt-3">
+                    <svg viewBox="0 0 100 20" class="w-full h-full">
+                        <path class="sparkline" stroke="var(--text-dim)" d="M0,10 Q50,10 100,10" />
+                    </svg>
+                </div>
             </div>
-            <!-- BCV EUR -->
-            <div class="glass-card p-4 text-center border-l-2 border-l-[#e2b053]/20">
-                <div class="flex justify-center items-center gap-1 mb-2">
-                    <span class="status-dot fixed"></span>
-                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">BCV EUR</span>
+            <!-- BCV EUR (Mini Card V6.0) -->
+            <div class="glass-card p-4 col-span-2 flex justify-between items-center">
+                <div class="flex flex-col">
+                    <span class="text-[7px] font-black text-[#e2b053]/50 uppercase tracking-[2px]">Tasa Euro
+                        Oficial</span>
+                    <span id="eur" class="font-rajdhani text-xl font-bold gold-h">--,-- Bs.</span>
                 </div>
-                <h3 id="eur" class="font-rajdhani text-2xl font-bold gold-text/70 leading-none">--,--</h3>
-                <span class="text-[7px] text-white/10 font-bold uppercase mt-1 block">Ancla</span>
+                <div class="badge-smart py-1 px-3 glass-card text-[7px] font-black tracking-[1px] border-[#e2b053]/20">
+                    ANCLA DIARIA</div>
             </div>
         </div>
-        <footer class="mt-auto pb-24 text-center flex flex-col items-center gap-4">
-            <div class="glass-card p-3 flex flex-col items-center gap-1 border-white/5 min-w-[200px]">
-                <span class="text-[6px] text-white/20 font-bold tracking-[0.2em] uppercase leading-none">DESARROLLADO
-                    POR</span>
-                <span class="font-rajdhani text-base font-bold gold-text tracking-[2px] leading-tight">JAIROKOV</span>
-                <div class="flex gap-4 mt-1">
-                    <a href="https://instagram.com/jairokov" target="_blank" class="social-link"><i
-                            data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://t.me/jairokov" target="_blank" class="social-link"><i data-lucide="send"
-                            class="w-4 h-4"></i></a>
-                    <a href="https://x.com/jairokov" target="_blank" class="social-link"><i data-lucide="twitter"
-                            class="w-4 h-4"></i></a>
-                </div>
+        <!-- Jairokov Branding (Imagen 1 Style) -->
+        <div class="mt-6 glass-card p-4 flex items-center justify-between border-white/5">
+            <div class="flex flex-col">
+                <span class="text-[7px] text-white/30 font-bold tracking-[2px] uppercase mb-1">SISTEMA ELITE</span>
+                <span class="font-rajdhani text-sm font-bold tracking-[2px]">@JAIROKOV</span>
             </div>
-        </footer>
+            <div class="flex gap-4">
+                <a href="https://instagram.com/jairokov" target="_blank" class="social-btn"><i data-lucide="instagram"
+                        class="w-4 h-4"></i></a>
+                <a href="https://t.me/jairokov" target="_blank" class="social-btn"><i data-lucide="send"
+                        class="w-4 h-4"></i></a>
+                <a href="https://x.com/jairokov" target="_blank" class="social-btn"><i data-lucide="twitter"
+                        class="w-4 h-4"></i></a>
+            </div>
+        </div>
+        <!-- Footer Proprietary -->
+        <div class="mt-8 mb-4 text-center">
+            <p class="text-[8px] text-white/10 font-black uppercase tracking-[0.4em]">PROPIEDAD DE <span
+                    class="gold-h">JAIROKOV SYSTEMS</span> © 2026</p>
+        </div>
     </div>
+    <!-- Nav Bar Fija (Imagen 1 Style) -->
     <nav class="nav-bar shrink-0">
-        <div class="nav-button"><i data-lucide="home" class="w-5 h-5"></i><span>INICIO</span></div>
-        <div class="nav-button active"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span>MONITOR</span></div>
-        <div class="nav-button"><i data-lucide="circle-dollar-sign" class="w-5 h-5"></i><span>DIVISAS</span></div>
-        <div class="nav-button"><i data-lucide="user" class="w-5 h-5"></i><span>PERFIL</span></div>
+        <div class="nav-item">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span>INICIO</span>
+        </div>
+        <div class="nav-item active">
+            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+            <span>MONITOR</span>
+        </div>
+        <div class="nav-item">
+            <i data-lucide="circle-dollar-sign" class="w-5 h-5"></i>
+            <span>DIVISAS</span>
+        </div>
+        <div class="nav-item">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span>PERFIL</span>
+        </div>
     </nav>
-    <!-- Lucide Icons -->
+    <!-- Audio y Lógica -->
+    <audio id="alert-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+        preload="auto"></audio>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
         let lastId = null;
         let isMuted = false;
-        const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        const audio = document.getElementById('alert-sound');
+        const ads = [
+            "/// JAIROKOV SYSTEMS: AUTOMATIZACIONES CON INTELIGENCIA ARTIFICIAL ///",
+            "/// SISTEMAS PARA EMPRENDEDORES Y PYMES ///",
+            "/// MONITOR HOO V6.0: EL MVP DEFINITIVO ///",
+            "/// DESBLOQUEA EL PODER DE LA IA EN TU NEGOCIO ///"
+        ];
+        let adIndex = 0;
         function startApp() {
-            alertSound.play().then(() => { alertSound.pause(); alertSound.currentTime = 0; }).catch(() => { });
             document.getElementById('splash').style.opacity = '0';
             setTimeout(() => { document.getElementById('splash').style.display = 'none'; sync(); }, 600);
         }
         function toggleMute() {
             isMuted = !isMuted;
-            const btn = document.getElementById('muteBtn');
-            btn.style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)';
+            document.getElementById('muteBtn').style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)';
         }
         async function sync() {
             const icon = document.getElementById('syncIcon');
@@ -310,25 +363,35 @@
                 const r = await fetch('/precio-actual');
                 const d = await r.json();
                 if (!d || !d.id) return;
-                document.getElementById('bcv').innerText = d.precio_bcv;
+                // Precios
                 document.getElementById('usdt').innerText = d.precio_usdt;
+                document.getElementById('bcv').innerText = d.precio_bcv;
                 document.getElementById('eur').innerText = d.precio_eur || '--,--';
+                // Variación
                 const vMercado = d.variacion_mercado || '0.00%';
-                document.getElementById('var-usdt').innerText = vMercado;
-                document.getElementById('var-usdt').style.color = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
+                const varLabel = document.getElementById('var-usdt');
+                varLabel.innerText = vMercado;
+                varLabel.style.color = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
+                // Gauge
                 const bcvNum = parseFloat(String(d.precio_bcv).replace(',', '.'));
                 const usdtNum = parseFloat(String(d.precio_usdt).replace(',', '.'));
                 const currentGap = ((usdtNum - bcvNum) / bcvNum) * 100;
-                document.getElementById('brecha').innerText = d.brecha_porcentaje || (currentGap.toFixed(2) + '%');
+                document.getElementById('brecha-porc').innerText = d.brecha_porcentaje || (currentGap.toFixed(2) + '%');
                 document.getElementById('brecha-bs').innerText = `Bs. ${(usdtNum - bcvNum).toFixed(2)}`;
-                document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(currentGap, 35) / 35);
+                // Dash Offset Cálculo
+                // 440 es el perímetro aprox.
+                document.getElementById('gauge-arc').style.strokeDashoffset = 440 - (440 * Math.min(currentGap, 35) / 35);
+                // Lógica de Alertas Smart
                 if (d.id !== lastId) {
-                    if (d.alerta_audio && !isMuted) alertSound.play().catch(() => { });
-                    document.getElementById('banner-alerta').style.display = d.mostrar_banner ? 'block' : 'none';
+                    if (d.alerta_audio && !isMuted) audio.play().catch(() => { });
+                    document.getElementById('alert-notification').style.display = d.mostrar_banner ? 'block' : 'none';
                     lastId = d.id;
                 }
-            } catch (e) { console.error(e); }
-            finally { setTimeout(() => icon.classList.remove('animate-spin'), 1000); }
+            } catch (e) {
+                console.error("Error Sync", e);
+            } finally {
+                setTimeout(() => icon.classList.remove('animate-spin'), 1000);
+            }
         }
         setInterval(sync, 30000);
     </script>
