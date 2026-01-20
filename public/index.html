@@ -3,71 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOO | Monitor de Brecha</title>
+    <title>Hoole | Quantum Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0b0f1a; color: white; font-family: sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        :root { --neon: #00ffaa; --gold: #f59e0b; }
+        body { background: #0a0c10; color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .neon-text { text-shadow: 0 0 15px var(--neon); color: var(--neon); }
+        .neon-border { box-shadow: 0 0 20px rgba(0, 255, 170, 0.2); border: 1px solid var(--neon); }
+        
+        /* Ticker Animado */
+        .ticker-wrap { background: rgba(0, 255, 170, 0.1); border-bottom: 1px solid var(--neon); }
+        .ticker { display: flex; animation: scroll 20s linear infinite; white-space: nowrap; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Medidor Circular */
+        .circle-gap { transform: rotate(-90deg); stroke-dasharray: 440; transition: stroke-dashoffset 1s ease; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-6">
-    <div class="max-w-md w-full">
-        <header class="text-center mb-10">
-            <h1 class="text-6xl font-black tracking-tighter text-blue-500 italic">HOO</h1>
-            <p class="text-slate-500 text-xs uppercase tracking-[0.3em] mt-2">Monitor de Brecha Real-Time</p>
+<body class="min-h-screen flex flex-col">
+
+    <div class="ticker-wrap py-2 overflow-hidden">
+        <div class="ticker font-bold text-xs tracking-widest uppercase">
+            <span>/// ALERTA DE MERCADO: BRECHA ACTUALIZADA /// VOLATILIDAD DETECTADA /// SISTEMA HOOLE OPERATIVO ///</span>
+        </div>
+    </div>
+
+    <main class="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
+        
+        <header class="text-center">
+            <h1 class="text-4xl font-black tracking-[0.2em] italic font-['Orbitron']">HOOLE</h1>
+            <p id="status-label" class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Sincronizando con la red...</p>
         </header>
 
-        <div id="dashboard" class="space-y-6">
-            <div class="glass p-8 rounded-3xl shadow-2xl">
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Referencia BCV</p>
-                <h2 id="bcv" class="text-5xl font-mono font-bold tracking-tight">--,--</h2>
-            </div>
-
-            <div class="glass p-8 rounded-3xl shadow-2xl border-l-4 border-l-emerald-500">
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Paralelo (Binance)</p>
-                <h2 id="usdt" class="text-5xl font-mono font-bold text-emerald-400 tracking-tight">--,--</h2>
-            </div>
-
-            <div class="flex gap-4">
-                <div class="glass flex-1 p-4 rounded-2xl text-center">
-                    <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Brecha</p>
-                    <span id="brecha" class="text-xl font-black text-blue-400">0%</span>
-                </div>
-                <div id="status-box" class="glass flex-1 p-4 rounded-2xl text-center flex items-center justify-center">
-                    <span id="status" class="text-[10px] font-black uppercase tracking-tighter text-slate-400">ESPERANDO...</span>
-                </div>
+        <div class="relative flex items-center justify-center">
+            <svg class="w-64 h-64">
+                <circle cx="128" cy="128" r="70" stroke="rgba(255,255,255,0.05)" stroke-width="12" fill="transparent" />
+                <circle id="gap-circle" cx="128" cy="128" r="70" stroke="var(--neon)" stroke-width="12" fill="transparent" 
+                        class="circle-gap" stroke-linecap="round" stroke-dashoffset="440" />
+            </svg>
+            <div class="absolute text-center">
+                <span id="brecha" class="text-5xl font-black neon-text">0%</span>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">The Gap</p>
             </div>
         </div>
 
-        <footer class="mt-12 text-center">
-            <p class="text-slate-600 text-[10px] font-medium">
-                ÚLTIMA ACTUALIZACIÓN: <span id="time" class="text-slate-400">--:--</span>
-            </p>
-        </footer>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-sm">
+            <div class="glass p-6 rounded-3xl relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">USDT Binance</p>
+                    <span class="text-emerald-400 text-xs">↑</span>
+                </div>
+                <h2 id="usdt" class="text-3xl font-bold mt-2 font-mono">--,--</h2>
+                <div class="h-10 w-full bg-emerald-500/10 mt-4 rounded-lg flex items-end">
+                    <div class="w-full h-1/2 bg-emerald-500/20 blur-sm"></div>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl">
+                <div class="flex justify-between items-start">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Official BCV</p>
+                    <span class="text-amber-400 text-xs">↓</span>
+                </div>
+                <h2 id="bcv" class="text-3xl font-bold mt-2 font-mono">--,--</h2>
+                <div class="h-10 w-full bg-amber-500/10 mt-4 rounded-lg"></div>
+            </div>
+        </div>
+
+        <button onclick="enableNotifications()" class="text-[9px] border border-slate-700 px-4 py-2 rounded-full text-slate-500 hover:text-white transition">
+            ACTIVAR ALERTAS PUSH / SONIDO
+        </button>
+    </main>
 
     <script>
-        async function fetchHoo() {
+        let lastVes = 0;
+        // Sonido de alerta (puedes cambiar la URL por cualquier mp3 corto)
+        const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+
+        function enableNotifications() {
+            Notification.requestPermission();
+            alertSound.play(); // Prueba de sonido
+        }
+
+        async function updateHoole() {
             try {
                 const r = await fetch('/precio-actual');
                 const d = await r.json();
                 
-                // Aplicamos tu separador de elementos ,
-                document.getElementById('bcv').innerText = d.precio_pivote_bcv || '--,--';
-                document.getElementById('usdt').innerText = d.precio_paralelo_usdt || '--,--';
-                document.getElementById('brecha').innerText = d.brecha_porcentaje || '0%';
-                document.getElementById('time').innerText = d.timestamp || '--:--';
-                
-                const s = document.getElementById('status');
-                const sb = document.getElementById('status-box');
-                s.innerText = (d.status || 'buscando').toUpperCase();
-                
-                if(d.status === 'devaluacion') sb.style.background = "rgba(127, 29, 29, 0.3)";
-                if(d.status === 'estable') sb.style.background = "rgba(6, 78, 59, 0.3)";
-            } catch (e) { console.log("Error de red"); }
+                // MAPEO CORRECTO DE TUS DATOS
+                const bcv = d.precio_bcv;
+                const usdt = d.precio_usdt;
+                const gap = d.brecha_porcentaje;
+
+                document.getElementById('bcv').innerText = `Bs. ${bcv}`;
+                document.getElementById('usdt').innerText = `Bs. ${usdt}`;
+                document.getElementById('brecha').innerText = gap;
+                document.getElementById('status-label').innerText = `Status: ${d.status.toUpperCase()}`;
+
+                // Actualizar medidor circular
+                const gapNum = parseFloat(gap.replace(',', '.'));
+                const offset = 440 - (440 * Math.min(gapNum, 30) / 30);
+                document.getElementById('gap-circle').style.strokeDashoffset = offset;
+
+                // Lógica de Alerta y Sonido
+                if (lastVes !== 0 && lastVes !== usdt) {
+                    alertSound.play();
+                    if (Notification.permission === "granted") {
+                        new Notification("¡HOO ALERT!", { body: `Cambio en la brecha: ${gap}` });
+                    }
+                }
+                lastVes = usdt;
+
+            } catch (e) { console.error("Error de enlace"); }
         }
-        fetchHoo();
-        setInterval(fetchHoo, 30000); // Actualiza cada 30 segundos
+
+        setInterval(updateHoole, 10000);
+        updateHoole();
     </script>
 </body>
 </html>
