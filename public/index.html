@@ -3,111 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HOO | Cyber Monitor</title>
+    <title>HOO | Cyber Monitor Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00ffaa; --bg: #030508; }
-        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
-        .neon-text { text-shadow: 0 0 15px var(--neon); color: var(--neon); }
+        :root {
+            --neon: #00ffaa;
+            --neon-secondary: #00e5ff;
+            --neon-danger: #ff003c;
+            --bg: #030508;
+            --bg-card: rgba(6, 10, 15, 0.8);
+            --grid-color: rgba(0, 255, 170, 0.03);
+        }
+        body {
+            background: var(--bg);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        /* Rejilla de Fondo */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+        .neon-text {
+            text-shadow: 0 0 15px var(--neon), 0 0 5px var(--neon);
+            color: var(--neon);
+        }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        /* Ticker */
+        #ticker {
+            background: rgba(0, 255, 170, 0.05);
+            border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+            height: 24px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .ticker-move {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            font-weight: 900;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--neon);
+            opacity: 0.8;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        /* Gauges */
         .gauge-ring { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 8; stroke-linecap: round; }
-        .gauge-val { fill: none; stroke: var(--neon); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 2s ease; }
-        #ticker { background: rgba(0, 255, 170, 0.1); border-bottom: 1px solid var(--neon); display: none; }
-        .ticker-move { display: flex; animation: scroll 15s linear infinite; white-space: nowrap; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .gauge-val {
+            fill: none;
+            stroke: var(--neon);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 8px var(--neon));
+        }
+        .glass-panel {
+            border-bottom: 1px solid rgba(0, 255, 170, 0.1);
+            padding-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .glass-panel:hover {
+            border-color: var(--neon);
+            transform: translateY(-2px);
+        }
+        .pulse { animation: pulse-anim 2s infinite; }
+        @keyframes pulse-anim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
-<body class="h-screen flex flex-col justify-between">
-
-    <div id="ticker" class="py-1"><div class="ticker-move font-bold text-[9px] tracking-widest uppercase">
-        <span>/// ALERTA HOO: VARIACIÓN CRÍTICA DETECTADA /// SISTEMA JAIROKOV ACTUALIZANDO ///</span>
-    </div></div>
-
+<body>
+    <div id="ticker">
+        <div class="ticker-move uppercase">
+            /// ALERTA HOO: VARIACIÓN CRÍTICA DETECTADA /// SISTEMA ACTUALIZANDO /// SEGURIDAD ACTIVA /// NO DESCONECTAR EL NODO ///
+        </div>
+    </div>
     <header class="pt-8 flex flex-col items-center">
-        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="1.5">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <circle cx="9" cy="9" r="1.5" fill="var(--neon)" class="animate-pulse"/>
-            <circle cx="15" cy="9" r="1.5" fill="var(--neon)" class="animate-pulse"/>
-            <path d="m12 13-1-2h2l-1 2z" fill="var(--neon)"/>
-        </svg>
-        <h1 class="text-4xl font-black font-['Orbitron'] tracking-tighter mt-2">HOO</h1>
-        <p class="text-[9px] text-emerald-500 font-bold uppercase tracking-[0.3em]">Automatiza tu negocio con IA</p>
+        <div class="pulse mb-2">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="1.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <circle cx="9" cy="9" r="1.5" fill="var(--neon)"/>
+                <circle cx="15" cy="9" r="1.5" fill="var(--neon)"/>
+                <path d="m12 13-1-2h2l-1 2z" fill="var(--neon)"/>
+            </svg>
+        </div>
+        <h1 class="text-5xl font-black font-orbitron tracking-tighter neon-text">HOO</h1>
+        <p class="text-[10px] text-emerald-500 font-black uppercase tracking-[0.5em] mt-1">Sistema Cyber</p>
     </header>
-
     <main class="flex flex-col items-center space-y-12">
-        <div class="relative flex items-center justify-center">
-            <svg width="220" height="220" viewBox="0 0 200 200">
+        <div class="relative flex items-center justify-center scale-110">
+            <svg width="240" height="240" viewBox="0 0 200 200">
                 <circle class="gauge-ring" cx="100" cy="100" r="85" />
                 <circle id="gap-arc" class="gauge-val" cx="100" cy="100" r="85" stroke-dasharray="534" stroke-dashoffset="534" transform="rotate(-90 100 100)" />
             </svg>
             <div class="absolute text-center">
-                <span id="brecha" class="text-5xl font-black font-['Orbitron'] neon-text tracking-tighter">--%</span>
-                <p class="text-[8px] text-slate-500 uppercase font-bold tracking-widest mt-1">Market Gap</p>
+                <span id="brecha" class="text-6xl font-black font-orbitron neon-text tracking-tighter">--%</span>
+                <p class="text-[9px] text-slate-500 uppercase font-black tracking-widest mt-2">Índice de Brecha</p>
             </div>
+            
+            <!-- Mini tacómetro -->
             <div class="absolute -bottom-4 -right-4">
                 <svg width="80" height="80" viewBox="0 0 100 100">
-                    <circle class="gauge-ring" cx="50" cy="50" r="35" fill="#030508"/>
-                    <circle id="var-arc" class="gauge-val" cx="50" cy="50" r="35" stroke-dasharray="220" stroke-dashoffset="220" transform="rotate(-90 50 50)" />
-                    <text x="50" y="55" text-anchor="middle" id="var-txt" class="text-[10px] font-bold fill-emerald-400 font-mono">+0.00%</text>
+                    <circle class="gauge-ring" cx="50" cy="50" r="35" stroke-width="4"/>
+                    <circle id="var-arc" class="gauge-val" cx="50" cy="50" r="35" stroke-dasharray="220" stroke-dashoffset="220" transform="rotate(-90 50 50)" stroke-width="6" stroke="#00e5ff"/>
+                    <text x="50" y="55" text-anchor="middle" id="var-txt" class="text-[10px] font-bold fill-[#00e5ff] font-mono">ACTV</text>
                 </svg>
             </div>
         </div>
-
-        <div class="w-full max-w-xs space-y-4 px-6">
-            <div class="flex justify-between items-baseline border-b border-white/5 pb-2">
-                <span class="text-[10px] text-slate-500 font-bold uppercase">Binance P2P</span>
-                <h2 id="usdt" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
+        <div class="w-full max-w-xs space-y-6 px-4">
+            <div class="glass-panel flex justify-between items-end">
+                <div>
+                    <span class="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Binance P2P</span>
+                    <h2 id="usdt" class="text-4xl font-black font-mono tracking-tighter uppercase text-white group-hover:text-emerald-400">--,--</h2>
+                </div>
+                <span class="text-[8px] font-bold text-slate-600 mb-1">USDT/VES</span>
             </div>
-            <div class="flex justify-between items-baseline border-b border-white/5 pb-2">
-                <span class="text-[10px] text-slate-500 font-bold uppercase">Oficial BCV</span>
-                <h2 id="bcv" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
+            <div class="glass-panel flex justify-between items-end">
+                <div>
+                    <span class="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Oficial BCV</span>
+                    <h2 id="bcv" class="text-4xl font-black font-mono tracking-tighter uppercase text-white">--,--</h2>
+                </div>
+                <span class="text-[8px] font-bold text-slate-600 mb-1">BCV/VES</span>
             </div>
         </div>
     </main>
-
-    <footer class="pb-8 flex flex-col items-center gap-2">
-        <div class="flex gap-8 text-[11px] font-bold text-slate-500 tracking-widest">
-            <span>X</span><span>IG</span><span>TG</span>
+    <footer class="pb-8 flex flex-col items-center gap-4">
+        <div class="flex gap-8 text-[11px] font-black text-slate-600 tracking-widest uppercase">
+            <span class="hover:text-emerald-400 cursor-pointer transition-colors">Nodos</span>
+            <span class="hover:text-emerald-400 cursor-pointer transition-colors">Auditoría</span>
+            <span class="hover:text-emerald-400 cursor-pointer transition-colors">Logs</span>
         </div>
-        <p class="text-sm font-black tracking-[0.2em] text-white/80">@JAIROKOV</p>
-        <button onclick="Notification.requestPermission()" class="text-[8px] text-slate-700 uppercase mt-2">Habilitar Alertas</button>
+        <p class="text-xs font-black tracking-[0.4em] text-white/30 uppercase">Operador: @JAIROKOV</p>
+        <div class="flex gap-4">
+            <button onclick="Notification.requestPermission()" class="text-[9px] bg-white/5 px-4 py-1 rounded-full text-slate-500 uppercase font-black hover:bg-white/10 transition-all border border-white/5">Habilitar Alertas</button>
+            <button onclick="sync()" class="text-[9px] bg-white/5 px-4 py-1 rounded-full text-slate-500 uppercase font-black hover:bg-white/10 transition-all border border-white/5">Refrescar</button>
+        </div>
     </footer>
-
     <script>
         let lastId = null;
         const alertSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-
         async function sync() {
             try {
                 const r = await fetch('/precio-actual');
                 const d = await r.json();
-
-                // CANDADO: Si el ID es igual, el servidor n8n no ha insertado nada (variación < 2%)
                 if (lastId !== null && d.id === lastId) return;
-
                 const isUpdate = lastId !== null;
                 lastId = d.id;
-
                 document.getElementById('bcv').innerText = d.precio_bcv;
                 document.getElementById('usdt').innerText = d.precio_usdt;
                 document.getElementById('brecha').innerText = d.brecha_porcentaje;
-
                 const gapNum = parseFloat(d.brecha_porcentaje.replace(',', '.'));
                 document.getElementById('gap-arc').style.strokeDashoffset = 534 - (534 * Math.min(gapNum, 30) / 30);
                 
-                // Variación (simulamos avance del tacómetro pequeño)
-                document.getElementById('var-arc').style.strokeDashoffset = 110; 
-
+                document.getElementById('var-arc').style.strokeDashoffset = 220 * (1 - 0.4); 
                 if (isUpdate) {
                     alertSfx.play().catch(() => {});
-                    document.getElementById('ticker').style.display = 'block';
                     if (Notification.permission === "granted") {
-                        new Notification("HOO ALERT", { body: `Variación del 2%: ${d.brecha_porcentaje}` });
+                        new Notification("ALERTA HOO", { body: `Variación detectada: ${d.brecha_porcentaje}` });
                     }
                 }
-            } catch (e) { console.log("..."); }
+            } catch (e) { 
+                console.log("Error de sincronización..."); 
+            }
         }
-        setInterval(sync, 20000);
+        setInterval(sync, 30000);
         sync();
     </script>
 </body>
