@@ -3,305 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HOO | Cyber Intelligence V2.5</title>
+    <title>Hoole | Premium Gap Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --neon: #00ffaa;
-            --neon-glow: rgba(0, 255, 170, 0.4);
-            --neon-secondary: #00e5ff;
-            --bg: #020406;
-            --glass: rgba(10, 15, 25, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-main: #121418;
+            --bg-card: rgba(30, 32, 38, 0.5);
+            --accent-gold: #e2b053;
+            --accent-green: #00d49a;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
         body {
-            background: var(--bg);
-            color: white;
-            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        /* Fondo Dinámico de Alta Gama */
+        /* Degradados de fondo sutiles */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 229, 255, 0.05) 0%, transparent 50%),
-                linear-gradient(rgba(0, 255, 170, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 170, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            background: radial-gradient(circle at 50% -20%, rgba(226, 176, 83, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 120%, rgba(0, 212, 154, 0.05) 0%, transparent 50%);
             z-index: -1;
-            animation: bgMove 20s infinite alternate ease-in-out;
         }
-        @keyframes bgMove {
-            0% {
-                transform: scale(1);
-            }
-            100% {
-                transform: scale(1.1);
-            }
-        }
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            border-radius: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
-        .neon-glow-text {
-            color: var(--neon);
-            text-shadow: 0 0 10px var(--neon-glow), 0 0 20px rgba(0, 255, 170, 0.2);
+        .gold-text {
+            color: var(--accent-gold);
         }
-        /* Ticker */
-        .ticker-bar {
-            background: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid rgba(0, 255, 170, 0.1);
-            padding: 6px 0;
-            height: 28px;
-            display: flex;
-            align-items: center;
+        .green-text {
+            color: var(--accent-green);
         }
-        .ticker-text {
-            display: inline-block;
-            white-space: nowrap;
-            animation: ticker 25s linear infinite;
-            color: var(--neon);
-            font-weight: 700;
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            opacity: 0.7;
-        }
-        @keyframes ticker {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-        /* Tacómetros */
-        .gauge-ring {
+        /* Tacómetro */
+        .gauge-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.02);
-            stroke-width: 6;
-        }
-        .gauge-progress {
-            fill: none;
-            stroke: var(--neon);
-            stroke-width: 10;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
             stroke-linecap: round;
-            filter: drop-shadow(0 0 12px var(--neon-glow));
-            transition: stroke-dashoffset 2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .scanner-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon), transparent);
-            animation: scan 3s infinite ease-in-out;
-            opacity: 0.2;
+        .gauge-fill {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 14;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 10px var(--accent-green));
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes scan {
-            0% {
-                top: 30%;
-            }
-            100% {
-                top: 70%;
-            }
+        /* Gráficos Sparkline */
+        .sparkline {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px var(--accent-green));
+        }
+        .sparkline-white {
+            stroke: rgba(255, 255, 255, 0.4);
+            filter: none;
+        }
+        /* Barra de Navegación */
+        .nav-bar {
+            background: rgba(18, 20, 24, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            height: 85px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+        .nav-item.active {
+            color: var(--accent-green);
+            opacity: 1;
+            text-shadow: 0 0 15px rgba(0, 212, 154, 0.4);
         }
         #splash {
             position: fixed;
             inset: 0;
-            background: var(--bg);
+            background: var(--bg-main);
             z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 1s ease, visibility 1s;
-        }
-        .pulse-logo {
-            animation: pulse 2s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 1;
-                filter: drop-shadow(0 0 20px var(--neon));
-            }
+            transition: 0.8s ease;
         }
     </style>
 </head>
 <body>
-    <!-- Pantalla Inicial -->
+    <!-- Pantalla de Inicio -->
     <div id="splash">
-        <div class="glass-card p-16 max-w-xl text-center border-[#00ffaa]/20 shadow-[0_0_50px_rgba(0,255,170,0.1)]">
+        <div class="glass-panel p-12 max-w-sm text-center">
             <div
-                class="w-24 h-24 rounded-full bg-[#00ffaa]/10 flex items-center justify-center mx-auto mb-8 pulse-logo">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="1.5">
+                class="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mx-auto mb-8 shadow-[0_0_40px_rgba(226,176,83,0.1)]">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)"
+                    stroke-width="1.5">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    <circle cx="9" cy="9" r="1.5" fill="var(--neon)" />
-                    <circle cx="15" cy="9" r="1.5" fill="var(--neon)" />
-                    <path d="m12 13-1-2h2l-1 2z" fill="var(--neon)" />
+                    <path d="m9 12 2 2 4-4" />
                 </svg>
             </div>
-            <h1 class="text-6xl font-black font-orbitron mb-2 tracking-tight">HOO <span
-                    class="text-[#00ffaa]">INTELLIGENCE</span></h1>
-            <p class="text-slate-500 font-bold mb-10 uppercase tracking-[0.4em] text-xs">Protocolo V2.5 Professional</p>
+            <h1 class="text-3xl font-extrabold mb-2 tracking-tight">Hoole <span class="gold-text">Premium</span></h1>
+            <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.3em] font-bold">Terminal de Monitoreo V3.0
+            </p>
             <button onclick="startApp()"
-                class="w-full py-6 bg-[#00ffaa] hover:bg-[#00e5ff] text-black font-black font-orbitron text-2xl rounded-2xl transition-all shadow-[0_0_30px_rgba(0,255,170,0.3)]">INICIAR
-                PROTOCOLO</button>
+                class="w-full py-5 bg-gradient-to-r from-[#e2b053] to-[#ffb347] text-black font-bold text-lg rounded-2xl shadow-[0_10px_25px_rgba(226,176,83,0.4)] transition-transform active:scale-95">INICIAR
+                MONITOR</button>
         </div>
     </div>
-    <!-- Ticker Superior -->
-    <div class="ticker-bar">
-        <div class="ticker-text font-orbitron uppercase">
-            /// NODO HOO ACTIVO /// ESCANEANDO MERCADO BINANCE P2P Y BCV /// ESTABILIDAD DEL SISTEMA: 99.8% ///
-            VARIACIÓN CRÍTICA: ACTIVADA /// SEGURIDAD NIVEL 7 ACTIVADA ///
-        </div>
-    </div>
-    <!-- Cabecera -->
-    <header class="pt-8 px-12 flex justify-between items-start">
-        <div class="flex items-center gap-4">
-            <div class="p-2 glass-card rounded-lg border-[#00ffaa]/20 border">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2"
-                    class="animate-pulse">
-                    <rect x="4" y="4" width="16" height="16" rx="2" />
-                    <rect x="9" y="9" width="6" height="6" />
-                    <path d="M15 2v2" />
-                    <path d="M15 20v2" />
-                    <path d="M2 15h2" />
-                    <path d="M2 9h2" />
-                    <path d="M20 15h2" />
-                    <path d="M20 9h2" />
-                    <path d="M9 2v2" />
-                    <path d="M9 20v2" />
-                </svg>
-            </div>
-            <div>
-                <h1 class="text-3xl font-black font-orbitron tracking-tighter neon-glow-text leading-none mt-1">HOO V2.5
-                </h1>
-                <p class="text-[8px] text-[#00ffaa] font-black uppercase tracking-[0.6em] opacity-60">Deep Market
-                    Analytics</p>
-            </div>
-        </div>
-        <div
-            class="flex items-center gap-2 px-3 py-1 glass-card rounded-full border-green-500/20 text-[10px] font-black text-green-500">
-            <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div> ENCRIPTADO
-        </div>
-    </header>
-    <!-- Monitor Principal -->
-    <main class="flex-1 flex flex-col items-center justify-center space-y-20 relative">
-        <div class="relative flex items-center justify-center scale-110 md:scale-125">
-            <svg width="300" height="300" viewBox="0 0 200 200" class="transform -rotate-90">
-                <circle class="gauge-ring" cx="100" cy="100" r="85" />
-                <circle id="gap-arc" class="gauge-progress" cx="100" cy="100" r="85" stroke-dasharray="534"
-                    stroke-dashoffset="534" />
-            </svg>
-            <div class="absolute text-center">
-                <div class="scanner-line"></div>
-                <span id="brecha"
-                    class="text-7xl font-black font-orbitron neon-glow-text tracking-tighter leading-none">--%</span>
-                <div class="h-[2px] w-24 bg-gradient-to-r from-transparent via-[#00ffaa] to-transparent mx-auto my-4">
-                </div>
-                <p class="text-[10px] text-slate-400 uppercase font-black tracking-[0.4em]">Índice de Volatilidad</p>
-            </div>
-        </div>
-        <div class="w-full max-w-2xl grid grid-cols-2 gap-8 px-12">
-            <div class="glass-card p-6 border-white/5">
-                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] block mb-2">Binance P2P /
-                    Mercado Real</span>
-                <div class="flex items-end justify-between">
-                    <h2 id="usdt" class="text-5xl font-black font-mono tracking-tighter text-white uppercase">--,--</h2>
-                    <span class="text-[10px] font-black text-[#00ffaa]">VES/USDT</span>
-                </div>
-            </div>
-            <div class="glass-card p-6 border-white/5">
-                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] block mb-2">Oficial BCV /
-                    Tasa Central</span>
-                <div class="flex items-end justify-between">
-                    <h2 id="bcv" class="text-5xl font-black font-mono tracking-tighter text-white uppercase">--,--</h2>
-                    <span class="text-[10px] font-black text-[#00e5ff]">VES/BCV</span>
-                </div>
-            </div>
-        </div>
-    </main>
-    <!-- Footer Táctico -->
-    <footer class="h-20 glass-card mx-12 mb-8 flex items-center justify-between px-10 border-white/5">
-        <div class="flex items-center gap-8">
-            <div class="flex flex-col">
-                <span class="text-[9px] text-slate-500 font-black uppercase tracking-widest">Operador Sistema</span>
-                <span class="text-xs font-black tracking-[0.3em] text-[#00ffaa]">@JAIROKOV_SYS</span>
-            </div>
-            <div class="h-8 w-[px] bg-white/10"></div>
-            <div class="flex items-center gap-4 py-1 px-4 bg-white/5 rounded-lg text-[10px] font-black text-slate-500">
-                <span>NODOS: 14/14</span>
-                <span class="text-emerald-500">MSG: OK</span>
-            </div>
-        </div>
-        <div class="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.2em]">
-            <div class="flex flex-col items-end">
-                <span class="text-slate-500">Último Ciclo</span>
-                <span id="timestamp" class="text-white">--:--:--</span>
-            </div>
-            <button onclick="sync()" class="p-3 bg-white/5 hover:bg-[#00ffaa]/20 rounded-lg transition-all">
+    <!-- Header -->
+    <header class="pt-10 px-10 flex justify-between items-center">
+        <span class="text-xl font-bold tracking-tight text-white">Hoole: <span class="gold-text">Gap
+                Monitor</span></span>
+        <div class="flex gap-4">
+            <button onclick="sync()"
+                class="p-2.5 bg-white/5 rounded-full border border-white/10 text-white/50 hover:text-white transition-colors">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                     <path d="M21 3v5h-5" />
                 </svg>
             </button>
         </div>
-    </footer>
+    </header>
+    <!-- Main -->
+    <main class="flex-1 flex flex-col items-center justify-center px-10 space-y-10 overflow-y-auto pb-32 pt-6">
+        <!-- Gran Tacómetro -->
+        <div class="relative flex items-center justify-center scale-110">
+            <svg width="240" height="240" viewBox="0 0 160 160" class="transform -rotate-90">
+                <circle class="gauge-bg" cx="80" cy="80" r="70" />
+                <circle id="gap-arc" class="gauge-fill" cx="80" cy="80" r="70" stroke-dasharray="440"
+                    stroke-dashoffset="440" />
+            </svg>
+            <div class="absolute text-center">
+                <span id="brecha" class="text-6xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
+                <p class="text-[9px] text-white/30 font-bold uppercase tracking-[0.4em] mt-2">THE GAP</p>
+            </div>
+        </div>
+        <!-- Cards -->
+        <div class="w-full grid grid-cols-2 gap-5">
+            <div class="glass-panel p-6 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="p-1.5 bg-[#e2b053]/10 rounded-lg text-[#e2b053]">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <path d="m22 7-8.5 8.5-5-5L2 17" />
+                            <path d="M16 7h6v6" />
+                        </svg>
+                    </div>
+                    <span class="text-[9px] text-white/40 font-bold uppercase tracking-wider">USDT Binance</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-white/30 font-medium">Bs.</span>
+                    <span id="usdt" class="text-2xl font-bold gold-text tracking-tighter">--,--</span>
+                </div>
+                <svg viewBox="0 0 100 30" class="w-full h-8">
+                    <path class="sparkline" d="M0,25 Q15,5 30,20 T60,10 T100,22" />
+                </svg>
+            </div>
+            <div class="glass-panel p-6 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="p-1.5 bg-white/10 rounded-lg text-white/60">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </div>
+                    <span class="text-[9px] text-white/40 font-bold uppercase tracking-wider">Official BCV</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-white/30 font-medium">Bs.</span>
+                    <span id="bcv" class="text-2xl font-bold text-white tracking-tighter">--,--</span>
+                </div>
+                <svg viewBox="0 0 100 30" class="w-full h-8 opacity-30">
+                    <path class="sparkline sparkline-white" d="M0,5 Q20,25 40,15 T70,20 T100,8" />
+                </svg>
+            </div>
+        </div>
+        <!-- Trend Card -->
+        <div class="w-full glass-panel p-6 space-y-5">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] text-white/50 font-black uppercase tracking-widest">24H GAP TREND</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)"
+                    stroke-width="3">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </div>
+            <div class="h-20 w-full relative">
+                <svg viewBox="0 0 400 100" class="w-full h-full">
+                    <defs>
+                        <linearGradient id="chartG" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#00d49a" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#chartG)" d="M0,100 L0,60 Q50,20 100,50 T200,30 T300,70 T400,40 L400,100 Z" />
+                    <path class="sparkline" d="M0,60 Q50,20 100,50 T200,30 T300,70 T400,40" stroke-width="3" />
+                </svg>
+                <div
+                    class="flex justify-between mt-3 text-[8px] font-bold text-white/20 tracking-tighter uppercase px-1">
+                    <span>08:00</span><span>12:00</span><span>18:00</span><span>04:00</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Nav -->
+    <nav class="nav-bar fixed bottom-0 left-0 right-0">
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Home</span>
+        </div>
+        <div class="nav-item active">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <line x1="12" x2="12" y1="20" y2="10" />
+                <line x1="18" x2="18" y1="20" y2="4" />
+                <line x1="6" x2="6" y1="20" y2="16" />
+            </svg>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Monitor</span>
+        </div>
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <line x1="2" x2="22" y1="10" y2="10" />
+            </svg>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Wallet</span>
+        </div>
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Profile</span>
+        </div>
+    </nav>
     <script>
         let lastId = null;
-        const alertSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         function startApp() {
             document.getElementById('splash').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('splash').style.visibility = 'hidden';
                 sync();
-            }, 1000);
+            }, 800);
         }
         async function sync() {
             try {
-                const r = await fetch('/precio-actual');
-                const d = await r.json();
+                const r = await fetch('/api/market-data');
+                const result = await r.json();
+                const d = result.analisis || result;
                 if (lastId !== null && d.id === lastId) return;
                 lastId = d.id;
-                document.getElementById('bcv').innerText = d.precio_bcv;
-                document.getElementById('usdt').innerText = d.precio_usdt;
-                document.getElementById('brecha').innerText = d.brecha_porcentaje;
-                document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
+                const bcv = d.precio_bcv || d.precio_pivote_bcv;
+                const usdt = d.precio_usdt || d.precio_paralelo_usdt;
+                document.getElementById('bcv').innerText = bcv;
+                document.getElementById('usdt').innerText = usdt;
+                document.getElementById('brecha').innerText = d.brecha_porcentaje + "%";
                 const gapNum = parseFloat(d.brecha_porcentaje.replace(',', '.'));
-                document.getElementById('gap-arc').style.strokeDashoffset = 534 - (534 * Math.min(gapNum, 30) / 30);
-                if (lastId !== null) {
-                    alertSfx.play().catch(() => { });
-                    if (Notification.permission === "granted") {
-                        new Notification("NODO HOO", { body: `Variación detectada: ${d.brecha_porcentaje}` });
-                    }
-                }
+                // Rango de 0% a 25% para el tacómetro
+                document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(gapNum, 25) / 25);
             } catch (e) { console.log("Reconectando..."); }
         }
         setInterval(sync, 30000);
