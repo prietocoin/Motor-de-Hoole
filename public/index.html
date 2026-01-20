@@ -21,9 +21,9 @@
     <style>
         :root {
             --bg-deep: #050608;
-            --bg-card: rgba(18, 20, 24, 0.9);
+            --bg-card: rgba(18, 20, 24, 0.7);
             --accent-gold: #e2b053;
-            --accent-gold-glow: rgba(226, 176, 83, 0.45);
+            --accent-gold-glow: rgba(226, 176, 83, 0.3);
             --accent-green: #00d49a;
             --accent-red: #ff4b4b;
             --glass-border: rgba(255, 255, 255, 0.05);
@@ -33,45 +33,53 @@
             background-color: var(--bg-deep);
             color: white;
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            overflow-y: auto;
-            min-height: 100vh;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             position: relative;
-            padding-top: env(safe-area-inset-top);
-        }
-        @media (min-width: 1024px) {
-            body {
-                overflow: hidden;
-            }
         }
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(226, 176, 83, 0.1) 0%, transparent 60%), radial-gradient(circle at 10% 95%, rgba(0, 212, 154, 0.04) 0%, transparent 40%);
+            background: radial-gradient(circle at 50% 0%, rgba(226, 176, 83, 0.08) 0%, transparent 60%);
             z-index: -1;
+        }
+        /* Escalado Global para evitar Scroll */
+        .ui-scaler {
+            transform: scale(0.85);
+            transform-origin: top center;
+            height: 117.6%;
+            /* Compensa el scale(0.85) -> 1/0.85 */
+            width: 117.6%;
+            position: absolute;
+            left: -8.8%;
+            top: 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .font-rajdhani {
             font-family: 'Rajdhani', sans-serif;
         }
         .ticker-bar {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             border-bottom: 1px solid var(--glass-border);
-            height: 26px;
+            height: 22px;
             display: flex;
             align-items: center;
             overflow: hidden;
-            z-index: 50;
+            z-index: 100;
         }
         .ticker-content {
             white-space: nowrap;
             animation: moveTicker 45s linear infinite;
             color: var(--accent-gold);
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 700;
-            letter-spacing: 2.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
         }
         @keyframes moveTicker {
@@ -84,161 +92,82 @@
         }
         .glass-card {
             background: var(--bg-card);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.7);
+            border-radius: 16px;
         }
         .gauge-svg {
-            filter: drop-shadow(0 0 25px var(--accent-gold-glow));
+            filter: drop-shadow(0 0 15px var(--accent-gold-glow));
         }
         .gauge-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.015);
+            stroke: rgba(255, 255, 255, 0.01);
             stroke-width: 8;
-            stroke-linecap: round;
         }
         .gauge-progress {
             fill: none;
             stroke: var(--accent-gold);
-            stroke-width: 10;
+            stroke-width: 9;
             stroke-linecap: round;
             stroke-dasharray: 440;
             stroke-dashoffset: 440;
             transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .gauge-segments {
-            fill: none;
-            stroke: var(--bg-deep);
-            stroke-width: 12;
-            stroke-dasharray: 2 10;
-        }
-        .nav-bar {
-            background: rgba(5, 6, 8, 0.98);
-            backdrop-filter: blur(35px);
-            border-top: 1px solid var(--glass-border);
-            height: 75px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: env(safe-area-inset-bottom);
-            z-index: 50;
-        }
-        .nav-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-dim);
-            font-size: 8px;
-            font-weight: 800;
-            letter-spacing: 1.2px;
-        }
-        .nav-button.active {
-            color: var(--accent-gold);
-            text-shadow: 0 0 10px var(--accent-gold-glow);
-        }
-        .badge-premium {
-            background: rgba(226, 176, 83, 0.15);
-            color: var(--accent-gold);
-            padding: 5px 14px;
-            border-radius: 100px;
-            font-size: 8px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            border: 1px solid rgba(226, 176, 83, 0.3);
-            text-transform: uppercase;
-        }
-        #splash {
+        #banner-alerta {
             position: fixed;
-            inset: 0;
-            background: var(--bg-deep);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .gold-h {
-            color: var(--accent-gold);
-        }
-        .owl-logo-premium {
-            filter: drop-shadow(0 0 20px var(--accent-gold-glow));
-        }
-        .section-label {
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 90;
+            background: linear-gradient(90deg, #ff4b4b, #8b0000);
+            color: white;
+            padding: 3px 15px;
+            border-radius: 0 0 8px 8px;
             font-size: 8px;
             font-weight: 900;
-            letter-spacing: 3px;
-            color: white;
-            opacity: 0.2;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .gauge-info-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) translateY(-10px);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            letter-spacing: 1.5px;
+            display: none;
         }
         .status-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: var(--accent-green);
             display: inline-block;
-            margin-right: 6px;
-            box-shadow: 0 0 8px var(--accent-green);
+            margin-right: 4px;
+            box-shadow: 0 0 6px var(--accent-green);
         }
         .status-dot.fixed {
             background: var(--text-dim);
             box-shadow: none;
         }
-        #banner-alerta {
-            position: fixed;
-            top: 26px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 45;
-            background: linear-gradient(90deg, #ff4b4b, #8b0000);
-            color: white;
-            padding: 4px 20px;
-            border-radius: 0 0 12px 12px;
-            font-size: 9px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 10px 30px rgba(255, 75, 75, 0.3);
-            display: none;
-            animation: slideDownBanner 0.4s ease-out;
-        }
-        @keyframes slideDownBanner {
-            from {
-                transform: translate(-50%, -100%);
-            }
-            to {
-                transform: translate(-50%, 0);
-            }
-        }
         .social-link {
-            transition: all 0.3s;
+            transition: all 0.2s;
             color: var(--text-dim);
         }
         .social-link:hover {
             color: var(--accent-gold);
-            transform: translateY(-2px);
+        }
+        .nav-bar {
+            background: rgba(5, 6, 8, 0.95);
+            border-top: 1px solid var(--glass-border);
+            height: 60px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
-    <div id="splash">
-        <svg class="owl-logo-premium" width="100" height="100" viewBox="0 0 100 100" fill="none">
+    <div id="splash"
+        style="position: fixed; inset: 0; background: var(--bg-deep); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.6s;">
+        <svg class="owl-logo-premium" width="80" height="80" viewBox="0 0 100 100" fill="none">
             <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="5"
                 stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="35" cy="50" r="11" fill="white" />
@@ -247,26 +176,23 @@
             <circle cx="65" cy="50" r="4.5" fill="#050608" />
             <polygon points="50,60 43,69 50,78 57,69" fill="var(--accent-gold)" />
         </svg>
-        <h1 class="mt-8 font-rajdhani text-4xl font-bold tracking-[0.4em]"><span class="gold-h">H</span>OO</h1>
-        <p class="text-[10px] text-white/30 uppercase tracking-[0.7em] mt-3 font-bold">SMART MONITOR V6.0</p>
+        <h1 class="mt-6 font-rajdhani text-3xl font-bold tracking-[0.4em]"><span class="gold-h">H</span>OO</h1>
         <button onclick="startApp()"
-            class="mt-16 px-16 py-5 glass-card font-black text-xs gold-text uppercase tracking-[0.3em] active:scale-95 transition-all outline-none border-gold-500/40 shadow-xl">Inicializar
-            Terminal</button>
+            class="mt-12 px-12 py-4 glass-card font-black text-xs gold-text uppercase tracking-[0.2em] outline-none">Conectar</button>
     </div>
     <!-- Ticker Bar -->
     <div class="ticker-bar shrink-0">
         <div class="ticker-content">
-            /// HOO V6.0: MONITOREO SMART ACTIVADO /// ALERTAS DE TENDENCIA EN VIVO /// ANCLA OFICIAL DIARIA
-            SINCRONIZADA /// BCV EUR INTEGRADO /// ANALÍTICA EN TIEMPO REAL ///
+            /// HOO SMART V6.0 /// DISEÑO COMPACTO MINIMALISTA /// BRUJA DE TENDENCIA ACTIVA /// CALIBRACIÓN EN TIEMPO
+            REAL ///
         </div>
     </div>
-    <div id="banner-alerta">⚠️ ALERTA: MOVIMIENTO VOLÁTIL DETECTADO</div>
-    <div class="container mx-auto px-6 flex-1 flex flex-col">
-        <header class="pt-6 flex justify-between items-center shrink-0">
-            <div class="flex items-center gap-4">
-                <div
-                    class="w-12 h-12 glass-card flex items-center justify-center border-white/5 shadow-gold-500/10 shadow-lg">
-                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+    <div id="banner-alerta">⚠️ ALERTA: VOLATILIDAD</div>
+    <div class="ui-scaler">
+        <header class="w-full max-w-4xl px-8 flex justify-between items-center py-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 glass-card flex items-center justify-center border-white/5">
+                    <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
                         <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="6"
                             stroke-linecap="round" stroke-linejoin="round" />
                         <circle cx="35" cy="50" r="10" fill="white" />
@@ -277,161 +203,111 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="font-rajdhani text-2xl font-bold tracking-widest text-white leading-none"><span
-                            class="gold-h">H</span>OO</h2>
-                    <p class="text-[8px] gold-text font-black uppercase tracking-[0.3em] mt-1.5 leading-none">SMART
+                    <h2 class="font-rajdhani text-xl font-bold tracking-widest text-white leading-none">HOO</h2>
+                    <p class="text-[7px] gold-text font-black uppercase tracking-[0.2em] mt-1 leading-none">SMART
                         MONITOR</p>
                 </div>
             </div>
-            <div class="flex gap-3">
+            <div class="flex gap-2">
                 <button id="muteBtn" onclick="toggleMute()"
-                    class="w-11 h-11 glass-card flex items-center justify-center text-white/30 active:text-white transition-colors">
-                    <svg id="volIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                    </svg>
-                </button>
-                <button onclick="sync()"
-                    class="w-11 h-11 glass-card flex items-center justify-center text-white/30 active:text-white transition-colors">
-                    <svg id="syncIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                        <path d="M21 3v5h-5" />
-                    </svg>
-                </button>
+                    class="w-10 h-10 glass-card flex items-center justify-center text-white/20"><i
+                        data-lucide="volume-2" class="w-4 h-4"></i></button>
+                <button onclick="sync()" class="w-10 h-10 glass-card flex items-center justify-center text-white/20"><i
+                        data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i></button>
             </div>
         </header>
-        <main class="flex-1 flex flex-col items-center justify-center py-6 overflow-hidden">
-            <!-- Bloque Superior de 3 Tarjetas -->
-            <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <!-- USDTVES (Binance) -->
-                <div class="glass-card p-6 border-gold-500/10 shadow-2xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center"><span id="dot-binance" class="status-dot"></span><span
-                                class="text-[9px] text-white/50 font-bold uppercase">USDTVES (Binance)</span></div>
-                        <span id="var-usdt" class="text-[9px] font-black text-green-500">+0.00%</span>
-                    </div>
-                    <h3 id="usdt" class="font-rajdhani text-4xl font-bold gold-text tracking-tighter leading-none">--,--
-                    </h3>
-                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">MERCADO EN VIVO</p>
-                </div>
-                <!-- BCV USD -->
-                <div class="glass-card p-6 border-white/5">
-                    <div class="flex items-center mb-4"><span class="status-dot fixed"></span><span
-                            class="text-[9px] text-white/50 font-bold uppercase">BCV USD (Oficial)</span></div>
-                    <h3 id="bcv" class="font-rajdhani text-4xl font-bold text-white/80 leading-none">--,--</h3>
-                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">ANCLA DIARIA</p>
-                </div>
-                <!-- BCV EUR -->
-                <div class="glass-card p-6 border-white/5 border-l-4 border-l-[#e2b053]/30">
-                    <div class="flex items-center mb-4"><span class="status-dot fixed"></span><span
-                            class="text-[9px] text-white/50 font-bold uppercase">BCV EUR (Oficial)</span></div>
-                    <h3 id="eur" class="font-rajdhani text-4xl font-bold gold-text/80 leading-none">--,--</h3>
-                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">ANCLA OFICIAL</p>
+        <!-- Tacómetro Central -->
+        <div class="relative flex items-center justify-center my-4">
+            <svg width="220" height="220" viewBox="0 0 160 160" class="transform -rotate-90 gauge-svg">
+                <circle class="gauge-bg" cx="80" cy="80" r="70" />
+                <circle id="gap-arc" class="gauge-progress" cx="80" cy="80" r="70" />
+            </svg>
+            <div
+                style="position: absolute; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; top: 50%; transform: translateY(-50%);">
+                <span class="badge-premium mb-4" style="font-size: 7px; padding: 3px 10px;">DIFERENCIA</span>
+                <span id="brecha"
+                    class="font-rajdhani text-6xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
+                <div class="mt-4 flex flex-col items-center pt-2 border-t border-white/5 w-32">
+                    <span id="brecha-bs" class="text-sm font-bold text-white/90">Bs. --,--</span>
+                    <span class="text-[8px] text-white/20 uppercase font-black tracking-[0.3em] mt-1">BRECHA EN
+                        BS.</span>
                 </div>
             </div>
-            <!-- Gauge Central (El Gran Tacómetro) -->
-            <div class="relative flex items-center justify-center shrink-0 mb-12">
-                <svg width="240" height="240" viewBox="0 0 160 160"
-                    class="transform -rotate-90 gauge-svg scale-110 md:scale-125">
-                    <circle class="gauge-bg" cx="80" cy="80" r="70" />
-                    <circle id="gap-arc" class="gauge-progress" cx="80" cy="80" r="70" />
-                    <circle class="gauge-segments" cx="80" cy="80" r="70" />
-                </svg>
-                <div class="gauge-info-overlay">
-                    <span class="badge-premium mb-6">DIFERENCIA</span>
-                    <span id="brecha"
-                        class="font-rajdhani text-5xl md:text-7xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
-                    <div class="mt-6 flex flex-col items-center pt-3 border-t border-white/10 w-24 md:w-44">
-                        <span id="brecha-bs" class="text-xs md:text-lg font-bold text-white/90 tracking-wide">Bs.
-                            --,--</span>
-                        <span
-                            class="text-[7px] md:text-[11px] text-white/30 uppercase font-black tracking-[0.4em] mt-2 leading-none">BRECHA
-                            EN BS.</span>
-                    </div>
+        </div>
+        <!-- Fila de 3 Tarjetas Minimalistas DEBAJO del tacómetro -->
+        <div class="w-full max-w-4xl grid grid-cols-3 gap-4 px-8 mt-2">
+            <!-- Binance -->
+            <div class="glass-card p-4 text-center">
+                <div class="flex justify-center items-center gap-1 mb-2">
+                    <span id="dot-binance" class="status-dot"></span>
+                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">USDTVES</span>
+                </div>
+                <h3 id="usdt" class="font-rajdhani text-2xl font-bold gold-text leading-none">--,--</h3>
+                <span id="var-usdt" class="text-[8px] font-bold text-green-500 mt-1 block">+0.00%</span>
+            </div>
+            <!-- BCV USD -->
+            <div class="glass-card p-4 text-center">
+                <div class="flex justify-center items-center gap-1 mb-2">
+                    <span class="status-dot fixed"></span>
+                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">BCV USD</span>
+                </div>
+                <h3 id="bcv" class="font-rajdhani text-2xl font-bold text-white/70 leading-none">--,--</h3>
+                <span class="text-[7px] text-white/10 font-bold uppercase mt-1 block">Oficial</span>
+            </div>
+            <!-- BCV EUR -->
+            <div class="glass-card p-4 text-center border-l-2 border-l-[#e2b053]/20">
+                <div class="flex justify-center items-center gap-1 mb-2">
+                    <span class="status-dot fixed"></span>
+                    <span class="text-[8px] text-white/40 font-bold uppercase tracking-wider">BCV EUR</span>
+                </div>
+                <h3 id="eur" class="font-rajdhani text-2xl font-bold gold-text/70 leading-none">--,--</h3>
+                <span class="text-[7px] text-white/10 font-bold uppercase mt-1 block">Ancla</span>
+            </div>
+        </div>
+        <footer class="mt-auto pb-24 text-center flex flex-col items-center gap-4">
+            <div class="glass-card p-3 flex flex-col items-center gap-1 border-white/5 min-w-[200px]">
+                <span class="text-[6px] text-white/20 font-bold tracking-[0.2em] uppercase leading-none">DESARROLLADO
+                    POR</span>
+                <span class="font-rajdhani text-base font-bold gold-text tracking-[2px] leading-tight">JAIROKOV</span>
+                <div class="flex gap-4 mt-1">
+                    <a href="https://instagram.com/jairokov" target="_blank" class="social-link"><i
+                            data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://t.me/jairokov" target="_blank" class="social-link"><i data-lucide="send"
+                            class="w-4 h-4"></i></a>
+                    <a href="https://x.com/jairokov" target="_blank" class="social-link"><i data-lucide="twitter"
+                            class="w-4 h-4"></i></a>
                 </div>
             </div>
-        </main>
-        <footer class="pb-8 text-center shrink-0">
-            <!-- Branding Corregido Jairokov -->
-            <div class="glass-card mx-auto max-w-xs p-4 flex flex-col items-center gap-2 border-white/5 mb-4">
-                <span class="text-[7px] text-white/30 font-bold tracking-[0.3em] uppercase">DESARROLLADO POR</span>
-                <span class="font-rajdhani text-lg font-bold gold-text tracking-[3px]">JAIROKOV</span>
-                <div class="flex gap-6 mt-1">
-                    <a href="https://instagram.com/jairokov" target="_blank" class="social-link" title="Instagram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="https://t.me/jairokov" target="_blank" class="social-link" title="Telegram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="m22 2-7 20-4-9-9-4Z"></path>
-                            <path d="M22 2 11 13"></path>
-                        </svg>
-                    </a>
-                    <a href="https://x.com/jairokov" target="_blank" class="social-link" title="X">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M4 4l11.733 16h4.267l-11.733-16z"></path>
-                            <path d="M4 20l6.768-6.768m2.464-2.464L20 4"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <p class="text-[9px] text-white/10 font-black uppercase tracking-[0.8em]">HOO SYSTEMS V6.0 • MARACAIBO
-                SOFTWARE LAB</p>
         </footer>
     </div>
     <nav class="nav-bar shrink-0">
-        <div class="nav-button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            </svg><span>INICIO</span></div>
-        <div class="nav-button active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <path d="M12 20V10M18 20V4M6 20v-4" />
-            </svg><span>MONITOR</span></div>
-        <div class="nav-button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M16 8h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4" />
-                <path d="M12 6v2" />
-                <path d="M12 16v2" />
-            </svg><span>DIVISAS</span></div>
-        <div class="nav-button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-            </svg><span>PERFIL</span></div>
+        <div class="nav-button"><i data-lucide="home" class="w-5 h-5"></i><span>INICIO</span></div>
+        <div class="nav-button active"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span>MONITOR</span></div>
+        <div class="nav-button"><i data-lucide="circle-dollar-sign" class="w-5 h-5"></i><span>DIVISAS</span></div>
+        <div class="nav-button"><i data-lucide="user" class="w-5 h-5"></i><span>PERFIL</span></div>
     </nav>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // --- MANIFEST PWA ---
-        (function setupPWA() {
-            const myManifest = { "name": "HOO Smart Monitor", "short_name": "HOO", "start_url": ".", "display": "standalone", "background_color": "#050608", "theme_color": "#050608" };
-            const blob = new Blob([JSON.stringify(myManifest)], { type: 'application/json' });
-            document.querySelector('#manifest-placeholder').setAttribute('href', URL.createObjectURL(blob));
-        })();
+        lucide.createIcons();
         let lastId = null;
         let isMuted = false;
         const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         function startApp() {
             alertSound.play().then(() => { alertSound.pause(); alertSound.currentTime = 0; }).catch(() => { });
             document.getElementById('splash').style.opacity = '0';
-            setTimeout(() => { document.getElementById('splash').style.visibility = 'hidden'; sync(); }, 600);
+            setTimeout(() => { document.getElementById('splash').style.display = 'none'; sync(); }, 600);
         }
-        function toggleMute() { isMuted = !isMuted; document.getElementById('volIcon').style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)'; }
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('muteBtn');
+            btn.style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)';
+        }
         async function sync() {
             const icon = document.getElementById('syncIcon');
             icon.classList.add('animate-spin');
             try {
                 const r = await fetch('/precio-actual');
-                if (!r.ok) throw new Error("Offline");
                 const d = await r.json();
                 if (!d || !d.id) return;
                 document.getElementById('bcv').innerText = d.precio_bcv;
@@ -439,7 +315,6 @@
                 document.getElementById('eur').innerText = d.precio_eur || '--,--';
                 const vMercado = d.variacion_mercado || '0.00%';
                 document.getElementById('var-usdt').innerText = vMercado;
-                document.getElementById('dot-binance').style.backgroundColor = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
                 document.getElementById('var-usdt').style.color = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
                 const bcvNum = parseFloat(String(d.precio_bcv).replace(',', '.'));
                 const usdtNum = parseFloat(String(d.precio_usdt).replace(',', '.'));
@@ -452,7 +327,7 @@
                     document.getElementById('banner-alerta').style.display = d.mostrar_banner ? 'block' : 'none';
                     lastId = d.id;
                 }
-            } catch (e) { console.error("Sync Error", e); }
+            } catch (e) { console.error(e); }
             finally { setTimeout(() => icon.classList.remove('animate-spin'), 1000); }
         }
         setInterval(sync, 30000);
