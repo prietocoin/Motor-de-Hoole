@@ -1,127 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hoole | Gap Monitor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --neon: #00ffaa; --gold: #f59e0b; }
-        body { background: #0a0c10; color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; touch-action: manipulation; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
-        .neon-text { text-shadow: 0 0 10px var(--neon); color: var(--neon); }
+let currentId = null; // Guardamos el ID del registro actual
+const alertSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+
+async function syncHoo() {
+    try {
+        const r = await fetch('/precio-actual');
+        const d = await r.json();
         
-        /* Banner Inteligente */
-        #ticker-wrap { background: rgba(0, 255, 170, 0.1); border-bottom: 1px solid var(--neon); display: none; }
-        .ticker { display: flex; animation: scroll 15s linear infinite; white-space: nowrap; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Gauge Reducido */
-        .circle-gap { transform: rotate(-90deg); stroke-dasharray: 440; transition: stroke-dashoffset 1s ease; }
-        .trend-line { stroke-width: 2; fill: none; stroke-linecap: round; filter: drop-shadow(0 0 3px var(--neon)); }
-    </style>
-</head>
-<body class="h-screen flex flex-col justify-between py-4">
-
-    <div id="ticker-wrap" class="py-1">
-        <div class="ticker font-bold text-[9px] tracking-widest uppercase">
-            <span>/// ALERTA: VOLATILIDAD DETECTADA /// CAMBIO EN LA BRECHA /// SISTEMA HOOLE EN ALTA PRIORIDAD ///</span>
-        </div>
-    </div>
-
-    <main class="flex-1 flex flex-col items-center justify-around px-6">
-        
-        <header class="text-center">
-            <h1 class="text-2xl font-bold tracking-[0.2em] italic font-['Orbitron']">HOOLE</h1>
-            <p id="status-label" class="text-[8px] text-slate-500 uppercase tracking-widest">STATUS: INICIALIZADO</p>
-        </header>
-
-        <div class="relative flex items-center justify-center">
-            <svg class="w-48 h-48">
-                <circle cx="96" cy="96" r="70" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" />
-                <circle id="gap-circle" cx="96" cy="96" r="70" stroke="var(--neon)" stroke-width="8" fill="transparent" 
-                        class="circle-gap" stroke-linecap="round" stroke-dashoffset="440" />
-            </svg>
-            <div class="absolute text-center">
-                <span id="brecha" class="text-4xl font-black font-['Orbitron'] neon-text">0%</span>
-                <p class="text-[8px] text-slate-400 font-bold uppercase tracking-widest">THE GAP</p>
-            </div>
-        </div>
-
-        <div class="w-full max-w-xs space-y-3">
-            <div class="glass p-4 rounded-2xl flex flex-col">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">USDT Binance</span>
-                    <span class="text-emerald-400 text-[10px]">↑</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-slate-400 text-xs font-bold">Bs.</span>
-                    <h2 id="usdt" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
-                </div>
-                <svg class="w-full h-8 mt-2"><path class="trend-line" stroke="#00ffaa" d="M0 20 Q 40 10, 80 25 T 160 15 T 240 20" /></svg>
-            </div>
-
-            <div class="glass p-4 rounded-2xl flex flex-col">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Official BCV</span>
-                    <span class="text-amber-400 text-[10px]">↓</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-slate-400 text-xs font-bold">Bs.</span>
-                    <h2 id="bcv" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
-                </div>
-                <svg class="w-full h-8 mt-2"><path class="trend-line" stroke="#f59e0b" d="M0 15 Q 40 25, 80 15 T 160 25 T 240 15" /></svg>
-            </div>
-        </div>
-
-        <button onclick="enableAlerts()" class="text-[8px] text-slate-600 uppercase tracking-widest border-b border-slate-800 pb-1">
-            Permitir Alertas de Sonido
-        </button>
-    </main>
-
-    <script>
-        let prevPrice = null;
-        const alertSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-
-        function enableAlerts() { Notification.requestPermission(); alertSfx.play(); }
-
-        async function syncHoo() {
-            try {
-                const r = await fetch('/precio-actual');
-                const d = await r.json();
-                
-                // Formateo y Mapeo
-                document.getElementById('bcv').innerText = d.precio_bcv;
-                document.getElementById('usdt').innerText = d.precio_usdt;
-                document.getElementById('brecha').innerText = d.brecha_porcentaje;
-                document.getElementById('status-label').innerText = `STATUS: ${d.status.toUpperCase()}`;
-
-                // Banner Inteligente: Solo si NO es estable/inicializado
-                const banner = document.getElementById('ticker-wrap');
-                if (d.status === 'estable' || d.status === 'inicializado') {
-                    banner.style.display = 'none';
-                } else {
-                    banner.style.display = 'block';
-                }
-
-                // Animación Círculo
-                const gapVal = parseFloat(d.brecha_porcentaje.replace(',', '.'));
-                document.getElementById('gap-circle').style.strokeDashoffset = 440 - (440 * Math.min(gapVal, 30) / 30);
-
-                // Sonido si cambia el precio
-                if (prevPrice && prevPrice !== d.precio_usdt) {
-                    alertSfx.play();
-                    if (Notification.permission === "granted") {
-                        new Notification("HOOLE", { body: `Cambio detectado: ${d.brecha_porcentaje}` });
-                    }
-                }
-                prevPrice = d.precio_usdt;
-            } catch (e) { console.log("Offline"); }
+        // 1. COMPARACIÓN CRÍTICA: ¿Es un registro nuevo?
+        if (currentId !== null && d.id === currentId) {
+            console.log("Sin cambios > 2%. Manteniendo estado actual.");
+            return; // Si el ID es igual, no hacemos NADA visual
         }
 
-        setInterval(syncHoo, 20000);
-        syncHoo();
-    </script>
-</body>
-</html>
+        // 2. Si llegamos aquí, es porque hay un nuevo registro (Salto del 2%)
+        currentId = d.id; 
+        
+        // Actualizar Textos
+        document.getElementById('bcv').innerText = d.precio_bcv;
+        document.getElementById('usdt').innerText = d.precio_usdt;
+        document.getElementById('brecha').innerText = d.brecha_porcentaje;
+        document.getElementById('status-label').innerText = `STATUS: ${d.status.toUpperCase()}`;
+
+        // Banner Inteligente: Solo si es devaluación o apreciación
+        const banner = document.getElementById('ticker-wrap');
+        banner.style.display = (d.status === 'estable' || d.status === 'inicializado') ? 'none' : 'block';
+
+        // Animación Círculo
+        const gapVal = parseFloat(d.brecha_porcentaje.replace(',', '.'));
+        document.getElementById('gap-circle').style.strokeDashoffset = 440 - (440 * Math.min(gapVal, 30) / 30);
+
+        // Disparar Alerta (Solo si no es la primera carga)
+        if (currentId !== null) {
+            alertSfx.play();
+            if (Notification.permission === "granted") {
+                new Notification("HOOLE: MOVIMIENTO DETECTADO", { 
+                    body: `La brecha ha cambiado a ${d.brecha_porcentaje}` 
+                });
+            }
+        }
+    } catch (e) { console.log("Reintentando conexión..."); }
+}
+
+setInterval(syncHoo, 30000); // Consulta cada 30 seg, pero solo refresca visualmente si hay cambio > 2%
+syncHoo();
