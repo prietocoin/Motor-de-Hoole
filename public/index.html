@@ -5,14 +5,10 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>HOO Smart Monitor V6.0</title>
-    <!-- PWA / Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="HOO">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="HOO">
     <meta name="theme-color" content="#050608">
-    <!-- Icons -->
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23050608' stroke='%23e2b053' stroke-width='2'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='12' fill='white'/><circle cx='65' cy='50' r='12' fill='white'/><circle cx='35' cy='50' r='5' fill='%23050608'/><circle cx='65' cy='50' r='5' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>">
     <link rel="apple-touch-icon"
@@ -54,9 +50,7 @@
             content: "";
             position: fixed;
             inset: 0;
-            background:
-                radial-gradient(circle at 50% 0%, rgba(226, 176, 83, 0.1) 0%, transparent 60%),
-                radial-gradient(circle at 10% 95%, rgba(0, 212, 154, 0.04) 0%, transparent 40%);
+            background: radial-gradient(circle at 50% 0%, rgba(226, 176, 83, 0.1) 0%, transparent 60%), radial-gradient(circle at 10% 95%, rgba(0, 212, 154, 0.04) 0%, transparent 40%);
             z-index: -1;
         }
         .font-rajdhani {
@@ -119,13 +113,6 @@
             stroke: var(--bg-deep);
             stroke-width: 12;
             stroke-dasharray: 2 10;
-        }
-        .sparkline {
-            fill: none;
-            stroke: var(--accent-green);
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            filter: drop-shadow(0 0 8px rgba(0, 212, 154, 0.3));
         }
         .nav-bar {
             background: rgba(5, 6, 8, 0.98);
@@ -213,11 +200,9 @@
             background: var(--text-dim);
             box-shadow: none;
         }
-        /* Banner de Alerta V6.0 (Integrado Estéticamente) */
         #banner-alerta {
             position: fixed;
             top: 26px;
-            /* Justo debajo del ticker */
             left: 50%;
             transform: translateX(-50%);
             z-index: 45;
@@ -241,6 +226,14 @@
                 transform: translate(-50%, 0);
             }
         }
+        .social-link {
+            transition: all 0.3s;
+            color: var(--text-dim);
+        }
+        .social-link:hover {
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -263,12 +256,10 @@
     <!-- Ticker Bar -->
     <div class="ticker-bar shrink-0">
         <div class="ticker-content">
-            /// HOO V6.0: MONITOREO SMART ACTIVADO /// ALERTAS DE TENDENCIA EN VIVO (1.8%-2%) /// ANCLA OFICIAL DIARIA
-            SINCRONIZADA /// EURO BCV INTEGRADO
-            /// ANALÍTICA DE BRECHA EN TIEMPO REAL ///
+            /// HOO V6.0: MONITOREO SMART ACTIVADO /// ALERTAS DE TENDENCIA EN VIVO /// ANCLA OFICIAL DIARIA
+            SINCRONIZADA /// BCV EUR INTEGRADO /// ANALÍTICA EN TIEMPO REAL ///
         </div>
     </div>
-    <!-- Banner de Alerta dinámico -->
     <div id="banner-alerta">⚠️ ALERTA: MOVIMIENTO VOLÁTIL DETECTADO</div>
     <div class="container mx-auto px-6 flex-1 flex flex-col">
         <header class="pt-6 flex justify-between items-center shrink-0">
@@ -311,77 +302,88 @@
                 </button>
             </div>
         </header>
-        <main class="flex-1 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 py-6 overflow-hidden">
-            <!-- Gauge Central: Movido por P2P vs Ancla BCV -->
-            <div class="relative flex items-center justify-center shrink-0">
+        <main class="flex-1 flex flex-col items-center justify-center py-6 overflow-hidden">
+            <!-- Bloque Superior de 3 Tarjetas -->
+            <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- USDTVES (Binance) -->
+                <div class="glass-card p-6 border-gold-500/10 shadow-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center"><span id="dot-binance" class="status-dot"></span><span
+                                class="text-[9px] text-white/50 font-bold uppercase">USDTVES (Binance)</span></div>
+                        <span id="var-usdt" class="text-[9px] font-black text-green-500">+0.00%</span>
+                    </div>
+                    <h3 id="usdt" class="font-rajdhani text-4xl font-bold gold-text tracking-tighter leading-none">--,--
+                    </h3>
+                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">MERCADO EN VIVO</p>
+                </div>
+                <!-- BCV USD -->
+                <div class="glass-card p-6 border-white/5">
+                    <div class="flex items-center mb-4"><span class="status-dot fixed"></span><span
+                            class="text-[9px] text-white/50 font-bold uppercase">BCV USD (Oficial)</span></div>
+                    <h3 id="bcv" class="font-rajdhani text-4xl font-bold text-white/80 leading-none">--,--</h3>
+                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">ANCLA DIARIA</p>
+                </div>
+                <!-- BCV EUR -->
+                <div class="glass-card p-6 border-white/5 border-l-4 border-l-[#e2b053]/30">
+                    <div class="flex items-center mb-4"><span class="status-dot fixed"></span><span
+                            class="text-[9px] text-white/50 font-bold uppercase">BCV EUR (Oficial)</span></div>
+                    <h3 id="eur" class="font-rajdhani text-4xl font-bold gold-text/80 leading-none">--,--</h3>
+                    <p class="text-[7px] text-white/20 font-black uppercase tracking-[1px] mt-2">ANCLA OFICIAL</p>
+                </div>
+            </div>
+            <!-- Gauge Central (El Gran Tacómetro) -->
+            <div class="relative flex items-center justify-center shrink-0 mb-12">
                 <svg width="240" height="240" viewBox="0 0 160 160"
-                    class="transform -rotate-90 gauge-svg scale-110 sm:scale-125 lg:scale-150">
+                    class="transform -rotate-90 gauge-svg scale-110 md:scale-125">
                     <circle class="gauge-bg" cx="80" cy="80" r="70" />
                     <circle id="gap-arc" class="gauge-progress" cx="80" cy="80" r="70" />
                     <circle class="gauge-segments" cx="80" cy="80" r="70" />
                 </svg>
                 <div class="gauge-info-overlay">
-                    <span class="badge-premium mb-6 lg:mb-12">BRECHA P2P</span>
+                    <span class="badge-premium mb-6">DIFERENCIA</span>
                     <span id="brecha"
-                        class="font-rajdhani text-5xl lg:text-7xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
-                    <div class="mt-6 lg:mt-10 flex flex-col items-center pt-3 border-t border-white/10 w-24 lg:w-44">
-                        <span id="brecha-bs" class="text-xs lg:text-lg font-bold text-white/90 tracking-wide">Bs.
+                        class="font-rajdhani text-5xl md:text-7xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
+                    <div class="mt-6 flex flex-col items-center pt-3 border-t border-white/10 w-24 md:w-44">
+                        <span id="brecha-bs" class="text-xs md:text-lg font-bold text-white/90 tracking-wide">Bs.
                             --,--</span>
                         <span
-                            class="text-[7px] lg:text-[11px] text-white/30 uppercase font-black tracking-[0.4em] mt-2 leading-none">SOBRE
-                            ANCLA OFICIAL</span>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full max-w-sm lg:max-w-md flex flex-col gap-6">
-                <!-- Mercado Dinámico (Binance) -->
-                <div>
-                    <span class="section-label">Mercado Volátil (P2P)</span>
-                    <div class="glass-card p-5 lg:p-10 space-y-4 border-gold-500/10 shadow-gold-500/5 shadow-2xl">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-center"><span class="status-dot"></span>
-                                <span id="label-status"
-                                    class="text-[9px] lg:text-xs text-white/50 font-bold uppercase">BINANCE P2P</span>
-                            </div>
-                            <span id="var-usdt" class="text-[9px] lg:text-xs font-black">+0.00%</span>
-                        </div>
-                        <h3 id="usdt"
-                            class="font-rajdhani text-4xl lg:text-6xl font-bold gold-text tracking-tighter leading-none">
-                            --,--</h3>
-                        <p class="text-[9px] lg:text-xs text-white/30 font-bold mt-2 uppercase tracking-[2px]">Tasa de
-                            Referencia Smart</p>
-                        <div class="h-8 lg:h-12"><svg viewBox="0 0 100 30" class="w-full h-full">
-                                <path class="sparkline" d="M0,25 Q20,10 40,25 T70,5 T100,20" />
-                            </svg></div>
-                    </div>
-                </div>
-                <!-- Anclas Oficiales (BCV - Estáticas/Diarias) -->
-                <div>
-                    <span class="section-label">Tasas de Anclaje (Oficial)</span>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="glass-card p-5 space-y-3 border-white/5">
-                            <div class="flex items-center"><span class="status-dot fixed"></span><span
-                                    class="text-[8px] text-white/30 font-bold uppercase">BCV USD</span></div>
-                            <h3 id="bcv"
-                                class="font-rajdhani text-2xl lg:text-3xl font-bold text-white/80 leading-none">--,--
-                            </h3>
-                            <p class="text-[7px] text-white/20 font-black uppercase tracking-widest mt-1">ANCLA DIARIA
-                            </p>
-                        </div>
-                        <div class="glass-card p-5 space-y-3 border-white/5">
-                            <div class="flex items-center"><span class="status-dot fixed"></span><span
-                                    class="text-[8px] text-white/30 font-bold uppercase">BCV EUR</span></div>
-                            <h3 id="eur" class="font-rajdhani text-2xl lg:text-3xl font-bold gold-text/80 leading-none">
-                                --,--</h3>
-                            <p class="text-[7px] text-white/20 font-black uppercase tracking-widest mt-1">ANCLA OFICIAL
-                            </p>
-                        </div>
+                            class="text-[7px] md:text-[11px] text-white/30 uppercase font-black tracking-[0.4em] mt-2 leading-none">BRECHA
+                            EN BS.</span>
                     </div>
                 </div>
             </div>
         </main>
         <footer class="pb-8 text-center shrink-0">
-            <p class="text-[9px] text-white/10 font-black uppercase tracking-[0.8em]">HOO SMART V6.0 • MARACAIBO
+            <!-- Branding Corregido Jairokov -->
+            <div class="glass-card mx-auto max-w-xs p-4 flex flex-col items-center gap-2 border-white/5 mb-4">
+                <span class="text-[7px] text-white/30 font-bold tracking-[0.3em] uppercase">DESARROLLADO POR</span>
+                <span class="font-rajdhani text-lg font-bold gold-text tracking-[3px]">JAIROKOV</span>
+                <div class="flex gap-6 mt-1">
+                    <a href="https://instagram.com/jairokov" target="_blank" class="social-link" title="Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="https://t.me/jairokov" target="_blank" class="social-link" title="Telegram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="m22 2-7 20-4-9-9-4Z"></path>
+                            <path d="M22 2 11 13"></path>
+                        </svg>
+                    </a>
+                    <a href="https://x.com/jairokov" target="_blank" class="social-link" title="X">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M4 4l11.733 16h4.267l-11.733-16z"></path>
+                            <path d="M4 20l6.768-6.768m2.464-2.464L20 4"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="text-[9px] text-white/10 font-black uppercase tracking-[0.8em]">HOO SYSTEMS V6.0 • MARACAIBO
                 SOFTWARE LAB</p>
         </footer>
     </div>
@@ -389,7 +391,7 @@
         <div class="nav-button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            </svg><span>HOME</span></div>
+            </svg><span>INICIO</span></div>
         <div class="nav-button active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2.5">
                 <rect width="18" height="18" x="3" y="3" rx="2" />
@@ -406,27 +408,15 @@
                 stroke-width="2.5">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
-            </svg><span>PROFIL</span></div>
+            </svg><span>PERFIL</span></div>
     </nav>
     <script>
         // --- MANIFEST PWA ---
         (function setupPWA() {
-            const myManifest = {
-                "name": "HOO Smart Monitor",
-                "short_name": "HOO",
-                "start_url": ".",
-                "display": "standalone",
-                "background_color": "#050608",
-                "theme_color": "#050608",
-                "icons": [
-                    { "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><circle cx='50' cy='50' r='40' stroke='%23e2b053' stroke-width='2' fill='none'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='12' fill='white'/><circle cx='65' cy='50' r='12' fill='white'/><circle cx='35' cy='50' r='5' fill='%23050608'/><circle cx='65' cy='50' r='5' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
-                    { "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050608'/><polyline points='20,35 50,55 80,35' fill='none' stroke='%23e2b053' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='35' cy='50' r='15' fill='white'/><circle cx='65' cy='50' r='15' fill='white'/><circle cx='35' cy='50' r='6' fill='%23050608'/><circle cx='65' cy='50' r='6' fill='%23050608'/><polygon points='50,60 44,68 50,76 56,68' fill='%23e2b053'/></svg>", "sizes": "512x512", "type": "image/svg+xml" }
-                ]
-            };
+            const myManifest = { "name": "HOO Smart Monitor", "short_name": "HOO", "start_url": ".", "display": "standalone", "background_color": "#050608", "theme_color": "#050608" };
             const blob = new Blob([JSON.stringify(myManifest)], { type: 'application/json' });
             document.querySelector('#manifest-placeholder').setAttribute('href', URL.createObjectURL(blob));
         })();
-        // --- APP LOGIC: SMART MONITOR V6.0 ---
         let lastId = null;
         let isMuted = false;
         const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
@@ -435,57 +425,36 @@
             document.getElementById('splash').style.opacity = '0';
             setTimeout(() => { document.getElementById('splash').style.visibility = 'hidden'; sync(); }, 600);
         }
-        function toggleMute() {
-            isMuted = !isMuted;
-            document.getElementById('muteBtn').style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)';
-        }
+        function toggleMute() { isMuted = !isMuted; document.getElementById('volIcon').style.color = isMuted ? 'var(--accent-red)' : 'var(--text-dim)'; }
         async function sync() {
             const icon = document.getElementById('syncIcon');
             icon.classList.add('animate-spin');
             try {
-                // Endpoint definitivo de n8n/Supabase/Render
                 const r = await fetch('/precio-actual');
                 if (!r.ok) throw new Error("Offline");
                 const d = await r.json();
                 if (!d || !d.id) return;
-                // 1. Mostrar Precios
                 document.getElementById('bcv').innerText = d.precio_bcv;
                 document.getElementById('usdt').innerText = d.precio_usdt;
                 document.getElementById('eur').innerText = d.precio_eur || '--,--';
-                // 2. Variación de Mercado (V6.0 Smart)
                 const vMercado = d.variacion_mercado || '0.00%';
                 document.getElementById('var-usdt').innerText = vMercado;
-                const vNum = parseFloat(vMercado.replace('%', ''));
+                document.getElementById('dot-binance').style.backgroundColor = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
                 document.getElementById('var-usdt').style.color = (d.status === 'bajando') ? 'var(--accent-red)' : 'var(--accent-green)';
-                // 3. Status dinámico
-                document.getElementById('label-status').innerText = (d.status || 'BINANCE P2P').toUpperCase();
-                // 4. Brecha y Tacómetro
                 const bcvNum = parseFloat(String(d.precio_bcv).replace(',', '.'));
                 const usdtNum = parseFloat(String(d.precio_usdt).replace(',', '.'));
                 const currentGap = ((usdtNum - bcvNum) / bcvNum) * 100;
                 document.getElementById('brecha').innerText = d.brecha_porcentaje || (currentGap.toFixed(2) + '%');
                 document.getElementById('brecha-bs').innerText = `Bs. ${(usdtNum - bcvNum).toFixed(2)}`;
                 document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(currentGap, 35) / 35);
-                // 5. INTELIGENCIA DE ALERTAS (Exclusivo V6.0)
                 if (d.id !== lastId) {
-                    // Solo actuar si es un registro nuevo
-                    if (d.alerta_audio && !isMuted) {
-                        alertSound.play().catch(() => { });
-                    }
-                    if (d.mostrar_banner) {
-                        document.getElementById('banner-alerta').style.display = 'block';
-                    } else {
-                        document.getElementById('banner-alerta').style.display = 'none';
-                    }
+                    if (d.alerta_audio && !isMuted) alertSound.play().catch(() => { });
+                    document.getElementById('banner-alerta').style.display = d.mostrar_banner ? 'block' : 'none';
                     lastId = d.id;
                 }
-            } catch (e) {
-                console.error("Sync Error", e);
-                document.getElementById('label-status').innerText = "SIN CONEXIÓN";
-            }
+            } catch (e) { console.error("Sync Error", e); }
             finally { setTimeout(() => icon.classList.remove('animate-spin'), 1000); }
         }
-        // Sincronización automática cada 30 segundos
         setInterval(sync, 30000);
     </script>
 </body>
