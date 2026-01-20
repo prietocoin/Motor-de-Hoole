@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hoole | Premium Gap Monitor V3.1</title>
+    <title>Hoole | Premium Gold Monitor V3.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -70,10 +70,6 @@
             stroke-linecap: round;
             filter: drop-shadow(0 0 5px var(--accent-green));
         }
-        .sparkline-white {
-            stroke: rgba(255, 255, 255, 0.4);
-            filter: none;
-        }
         .nav-bar {
             background: rgba(18, 20, 24, 0.85);
             backdrop-filter: blur(20px);
@@ -133,10 +129,10 @@
                 </svg>
             </div>
             <h1 class="text-3xl font-extrabold mb-2 tracking-tight">Hoole <span class="gold-text">Premium</span></h1>
-            <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.3em] font-bold">Terminal Gold V3.1</p>
+            <p class="text-slate-500 text-[10px] mb-10 uppercase tracking-[0.3em] font-bold">Protocolo Gold V3.2</p>
             <button id="startBtn" onclick="startApp()"
-                class="w-full py-5 bg-gradient-to-r from-[#e2b053] to-[#ffb347] text-black font-bold text-lg rounded-2xl shadow-[0_10px_25px_rgba(226,176,83,0.4)]">CONECTAR
-                MONITOR</button>
+                class="w-full py-5 bg-gradient-to-r from-[#e2b053] to-[#ffb347] text-black font-bold text-lg rounded-2xl shadow-[0_10px_25px_rgba(226,176,83,0.4)] transition-all active:scale-95">ACCEDER
+                A DATOS REALES</button>
         </div>
     </div>
     <header class="pt-8 px-8 flex justify-between items-center shrink-0">
@@ -152,7 +148,7 @@
         </button>
     </header>
     <main class="flex-1 flex flex-col items-center justify-center px-6 space-y-10 overflow-y-auto pb-32">
-        <div class="relative flex items-center justify-center scale-90 sm:scale-100">
+        <div class="relative flex items-center justify-center">
             <svg width="240" height="240" viewBox="0 0 160 160" class="transform -rotate-90">
                 <circle class="gauge-bg" cx="80" cy="80" r="70" />
                 <circle id="gap-arc" class="gauge-fill" cx="80" cy="80" r="70" stroke-dasharray="440"
@@ -160,7 +156,7 @@
             </svg>
             <div class="absolute text-center">
                 <span id="brecha" class="text-6xl font-extrabold gold-text tracking-tighter leading-none">--%</span>
-                <p class="text-[9px] text-white/30 font-bold uppercase tracking-[0.4em] mt-2">THE GAP</p>
+                <p class="text-[9px] text-white/30 font-bold uppercase tracking-[0.4em] mt-2">EL DIFERENCIAL</p>
             </div>
         </div>
         <div class="w-full grid grid-cols-2 gap-4 max-w-lg">
@@ -192,26 +188,26 @@
                             <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
                     </div>
-                    <span class="text-[9px] text-white/40 font-bold uppercase tracking-wider">Official BCV</span>
+                    <span class="text-[9px] text-white/40 font-bold uppercase tracking-wider">BCV Oficial</span>
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xs text-white/30 font-medium">Bs.</span>
                     <span id="bcv" class="text-2xl font-bold text-white tracking-tighter">--,--</span>
                 </div>
                 <svg viewBox="0 0 100 30" class="w-full h-8 opacity-30">
-                    <path class="sparkline sparkline-white" d="M0,5 Q20,25 40,15 T70,20 T100,8" />
+                    <path class="sparkline" stroke="white" d="M0,5 Q20,25 40,15 T70,20 T100,8" />
                 </svg>
             </div>
         </div>
         <div class="w-full glass-panel p-6 space-y-5 max-w-lg">
             <div class="flex justify-between items-center">
-                <span class="text-[10px] text-white/50 font-black uppercase tracking-widest">24H GAP TREND</span>
+                <span class="text-[10px] text-white/50 font-black uppercase tracking-widest">TENDENCIA 24H</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)"
                     stroke-width="3">
                     <path d="m9 18 6-6-6-6" />
                 </svg>
             </div>
-            <div class="h-20 w-full relative">
+            <div class="h-24 w-full relative">
                 <svg viewBox="0 0 400 100" class="w-full h-full">
                     <defs>
                         <linearGradient id="chartG" x1="0" y1="0" x2="0" y2="1">
@@ -223,7 +219,7 @@
                     <path class="sparkline" d="M0,60 Q50,20 100,50 T200,30 T300,70 T400,40" stroke-width="3" />
                 </svg>
                 <div
-                    class="flex justify-between mt-3 text-[8px] font-bold text-white/20 tracking-tighter uppercase px-1">
+                    class="flex justify-between mt-4 text-[8px] font-bold text-white/20 tracking-tighter uppercase px-1">
                     <span>08:00</span><span>12:00</span><span>18:00</span><span>04:00</span>
                 </div>
             </div>
@@ -274,37 +270,41 @@
             const icon = document.getElementById('syncIcon');
             icon.classList.add('loading-spin');
             try {
-                // Intentamos múltiples rutas comunes
-                let r;
-                try {
-                    r = await fetch('/api/market-data');
-                } catch {
-                    r = await fetch('/precio-actual');
-                }
-                if (!r.ok) throw new Error('Network error');
-                const result = await r.json();
-                // Parseo inteligente: Maneja arrays de n8n o objetos directos
-                const d = Array.isArray(result) ? result[0] : (result.analisis || result);
-                if (!d) return;
-                const currentId = d.id || JSON.stringify(d);
-                if (lastId === currentId) {
+                // EXITO: Confirmado por diagnóstico que el endpoint es /precio-actual
+                const r = await fetch('/precio-actual');
+                if (!r.ok) throw new Error('Falló /precio-actual');
+                const d = await r.json();
+                if (!d || !d.id) return;
+                if (lastId === d.id) {
                     icon.classList.remove('loading-spin');
                     return;
                 }
-                lastId = currentId;
-                const bcv = d.precio_bcv || d.precio_pivote_bcv || '--,--';
-                const usdt = d.precio_usdt || d.precio_paralelo_usdt || '--,--';
-                const gap = d.brecha_porcentaje || '0';
+                lastId = d.id;
+                // Mapeo exacto según respuesta del servidor
+                const bcv = d.precio_bcv || '--,--';
+                const usdt = d.precio_usdt || '--,--';
+                const gapStr = d.brecha_porcentaje || '0%';
                 document.getElementById('bcv').innerText = bcv;
                 document.getElementById('usdt').innerText = usdt;
-                document.getElementById('brecha').innerText = gap + "%";
-                const gapNum = parseFloat(gap.replace(',', '.'));
-                document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(gapNum, 25) / 25);
+                document.getElementById('brecha').innerText = gapStr;
+                const gapNum = parseFloat(gapStr.replace(',', '.').replace('%', ''));
+                document.getElementById('gap-arc').style.strokeDashoffset = 440 - (440 * Math.min(gapNum, 30) / 30);
             } catch (e) {
-                console.error("Fallo de conexión:", e);
+                console.error("Error de datos:", e);
+                // Fallback secundario silencioso
+                try {
+                    const r2 = await fetch('/api/market-data');
+                    const d2 = await r2.json();
+                    if (d2.analisis || d2.precio_bcv) syncWithData(d2.analisis || d2);
+                } catch (e) { }
             } finally {
                 setTimeout(() => icon.classList.remove('loading-spin'), 1000);
             }
+        }
+        function syncWithData(d) {
+            document.getElementById('bcv').innerText = d.precio_bcv;
+            document.getElementById('usdt').innerText = d.precio_usdt;
+            document.getElementById('brecha').innerText = d.brecha_porcentaje;
         }
         setInterval(sync, 30000);
     </script>
