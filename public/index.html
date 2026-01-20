@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOO | Monitor de Brecha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0f1a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+    <div class="max-w-md w-full">
+        <header class="text-center mb-10">
+            <h1 class="text-6xl font-black tracking-tighter text-blue-500 italic">HOO</h1>
+            <p class="text-slate-500 text-xs uppercase tracking-[0.3em] mt-2">Monitor de Brecha Real-Time</p>
+        </header>
+
+        <div id="dashboard" class="space-y-6">
+            <div class="glass p-8 rounded-3xl shadow-2xl">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Referencia BCV</p>
+                <h2 id="bcv" class="text-5xl font-mono font-bold tracking-tight">--,--</h2>
+            </div>
+
+            <div class="glass p-8 rounded-3xl shadow-2xl border-l-4 border-l-emerald-500">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Paralelo (Binance)</p>
+                <h2 id="usdt" class="text-5xl font-mono font-bold text-emerald-400 tracking-tight">--,--</h2>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="glass flex-1 p-4 rounded-2xl text-center">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Brecha</p>
+                    <span id="brecha" class="text-xl font-black text-blue-400">0%</span>
+                </div>
+                <div id="status-box" class="glass flex-1 p-4 rounded-2xl text-center flex items-center justify-center">
+                    <span id="status" class="text-[10px] font-black uppercase tracking-tighter text-slate-400">ESPERANDO...</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center">
+            <p class="text-slate-600 text-[10px] font-medium">
+                ÚLTIMA ACTUALIZACIÓN: <span id="time" class="text-slate-400">--:--</span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        async function fetchHoo() {
+            try {
+                const r = await fetch('/precio-actual');
+                const d = await r.json();
+                
+                // Aplicamos tu separador de elementos ,
+                document.getElementById('bcv').innerText = d.precio_pivote_bcv || '--,--';
+                document.getElementById('usdt').innerText = d.precio_paralelo_usdt || '--,--';
+                document.getElementById('brecha').innerText = d.brecha_porcentaje || '0%';
+                document.getElementById('time').innerText = d.timestamp || '--:--';
+                
+                const s = document.getElementById('status');
+                const sb = document.getElementById('status-box');
+                s.innerText = (d.status || 'buscando').toUpperCase();
+                
+                if(d.status === 'devaluacion') sb.style.background = "rgba(127, 29, 29, 0.3)";
+                if(d.status === 'estable') sb.style.background = "rgba(6, 78, 59, 0.3)";
+            } catch (e) { console.log("Error de red"); }
+        }
+        fetchHoo();
+        setInterval(fetchHoo, 30000); // Actualiza cada 30 segundos
+    </script>
+</body>
+</html>
