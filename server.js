@@ -1,32 +1,37 @@
 const express = require('express');
 const { Pool } = require('pg');
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Conexión a la base de datos (Usaremos el Host que termina en .pooler.supabase.com)
+// Configuración de la base de datos (Supabase)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-// Endpoint para que tu App pida los datos
+// Permitir que Render sirva los archivos de la carpeta 'public'
+app.use(express.static('public'));
+
+// API para que el dashboard obtenga los datos
 app.get('/precio-actual', async (req, res) => {
   try {
-    // Traemos la última fila (la que tiene el ID más alto)
     const result = await pool.query('SELECT * FROM market_data ORDER BY id DESC LIMIT 1');
-    
     if (result.rows.length === 0) {
-      return res.status(404).json({ mensaje: "No hay datos guardados aún" });
+      return res.json({ mensaje: "Esperando datos..." });
     }
-
-    // Enviamos el dato limpio a la App
     res.json(result.rows[0]);
   } catch (err) {
-    console.error("Error en la DB:", err);
-    res.status(500).json({ error: "Error al leer Supabase" });
+    console.error(err);
+    res.status(500).json({ error: "Error al conectar con Supabase" });
   }
 });
 
+// Ruta principal para ver el Dashboard
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(port, () => {
-  console.log(`API de Hoole lista en puerto ${port}`);
+  console.log(`Motor de HOO encendido en puerto ${port}`);
 });
