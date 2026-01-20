@@ -3,144 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jairokov | Hoole AI</title>
+    <title>HOO | Market Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00ffaa; --bg: #05070a; }
+        :root { --neon: #00ffaa; --bg: #030508; }
         body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .neon-text { text-shadow: 0 0 10px var(--neon); color: var(--neon); }
-        .owl-eye { fill: var(--neon); filter: drop-shadow(0 0 5px var(--neon)); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .neon-text { text-shadow: 0 0 12px var(--neon); color: var(--neon); }
         
-        /* Banner Condicional */
+        /* Tacómetro */
+        .gauge-base { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 12; stroke-linecap: round; }
+        .gauge-arc { fill: none; stroke: var(--neon); stroke-width: 12; stroke-linecap: round; 
+                     stroke-dasharray: 330; stroke-dashoffset: 330; transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         #ticker-wrap { background: rgba(0, 255, 170, 0.1); border-bottom: 1px solid var(--neon); display: none; }
         .ticker { display: flex; animation: scroll 15s linear infinite; white-space: nowrap; }
         @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        .circle-gap { transform: rotate(-90deg); stroke-dasharray: 440; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
-<body class="h-screen flex flex-col justify-between">
+<body class="h-screen flex flex-col">
 
     <div id="ticker-wrap" class="py-1">
         <div class="ticker font-bold text-[9px] tracking-widest uppercase">
-            <span>/// ALERTA JAIROKOV: VARIACIÓN SUPERIOR AL 2% DETECTADA /// ACTUALIZANDO MERCADO EN TIEMPO REAL ///</span>
+            <span>/// ALERTA HOO: VARIACIÓN CRÍTICA DETECTADA (+2%) /// RECALIBRANDO SISTEMA ///</span>
         </div>
     </div>
 
-    <main class="flex-1 flex flex-col items-center justify-around px-8">
+    <main class="flex-1 flex flex-col items-center justify-around px-10 py-6">
         
-        <header class="text-center">
-            <div class="flex justify-center mb-2">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle class="owl-eye" cx="9" cy="9" r="1"/><circle class="owl-eye" cx="15" cy="9" r="1"/><path d="m12 11.5 1 1.5-1 1.5-1-1.5z"/>
-                </svg>
-            </div>
-            <h1 class="text-3xl font-black tracking-[0.3em] font-['Orbitron'] text-white">JAIROKOV</h1>
-            <p class="text-[9px] text-emerald-500 font-bold uppercase tracking-[0.2em]">Automatiza tu negocio con IA</p>
-        </header>
-
-        <div class="relative flex items-center justify-center scale-90 md:scale-100">
-            <svg class="w-56 h-56">
-                <circle cx="112" cy="112" r="85" stroke="rgba(255,255,255,0.03)" stroke-width="10" fill="transparent" />
-                <circle id="gap-circle" cx="112" cy="112" r="85" stroke="var(--neon)" stroke-width="10" fill="transparent" 
-                        class="circle-gap" stroke-linecap="round" stroke-dashoffset="534" />
+        <div class="w-full flex justify-between items-center opacity-40">
+            <p class="text-[9px] tracking-[0.4em] font-bold">HOO APP</p>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-slate-500">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="9" cy="9" r="0.5" fill="currentColor"/><circle cx="15" cy="9" r="0.5" fill="currentColor"/>
             </svg>
-            <div class="absolute text-center">
-                <span id="brecha" class="text-5xl font-black font-['Orbitron'] neon-text">--%</span>
-                <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest mt-1">Market Gap</p>
+        </div>
+
+        <div class="relative mt-4">
+            <svg width="240" height="160" viewBox="0 0 200 120">
+                <path class="gauge-base" d="M20 100 A 80 80 0 0 1 180 100" />
+                <path id="gauge-progress" class="gauge-arc" d="M20 100 A 80 80 0 0 1 180 100" />
+            </svg>
+            
+            <div class="absolute inset-0 flex flex-col items-center justify-center pt-8">
+                <span id="brecha" class="text-5xl font-black font-['Orbitron'] neon-text tracking-tighter">--%</span>
+                <p class="text-[8px] text-slate-500 uppercase tracking-widest">Market Gap</p>
+            </div>
+
+            <div class="absolute bottom-2 right-0 glass px-3 py-1 rounded-lg border-l-2 border-emerald-500/50">
+                <p class="text-[7px] text-slate-500 uppercase font-bold">Variación</p>
+                <span id="variacion-txt" class="text-xs font-bold text-emerald-400">+0.00%</span>
             </div>
         </div>
 
         <div class="w-full max-w-xs space-y-4">
-            <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
-                <div>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Binance P2P</p>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-slate-600 text-[10px] font-bold">Bs</span>
-                        <h2 id="usdt" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <span class="text-emerald-500 text-xs font-bold font-mono">USDT</span>
-                </div>
+            <div class="flex justify-between items-end border-b border-white/5 pb-2">
+                <span class="text-[10px] text-slate-500 font-bold uppercase">Binance P2P</span>
+                <h2 id="usdt" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
             </div>
+            <div class="flex justify-between items-end border-b border-white/5 pb-2">
+                <span class="text-[10px] text-slate-500 font-bold uppercase">Oficial BCV</span>
+                <h2 id="bcv" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
+            </div>
+        </div>
 
-            <div class="glass p-5 rounded-[2rem] flex justify-between items-center border-r-2 border-r-amber-500/30">
-                <div>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Referencia BCV</p>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-slate-600 text-[10px] font-bold">Bs</span>
-                        <h2 id="bcv" class="text-3xl font-bold font-mono tracking-tighter">--,--</h2>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <span class="text-amber-500 text-xs font-bold font-mono">OFFICIAL</span>
-                </div>
-            </div>
+        <div class="text-center">
+            <p class="text-[8px] text-slate-600 uppercase tracking-[0.3em] mb-1">Automatiza tu negocio con IA</p>
+            <p class="text-[10px] font-bold text-white/40 tracking-widest">DESARROLLADO POR @JAIROKOV</p>
         </div>
     </main>
 
-    <footer class="pb-6 px-6">
-        <div class="flex flex-col items-center gap-2">
-            <div class="flex gap-6 text-slate-500 text-[10px] font-bold tracking-widest">
-                <span>X</span><span>IG</span><span>TG</span>
-            </div>
-            <p class="text-white text-xs font-black tracking-widest">@JAIROKOV</p>
-            <p class="text-[8px] text-slate-600 mt-2 uppercase tracking-tighter">
-                Refresca cada 2% • <span id="time">--:--</span>
-            </p>
-        </div>
-    </footer>
-
     <script>
         let lastId = null;
-        const alertPing = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        const alertSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
-        async function updateUI() {
+        async function updateHoo() {
             try {
-                const response = await fetch('/precio-actual');
-                const data = await response.json();
+                const r = await fetch('/precio-actual');
+                const d = await r.json();
 
-                // REGLA DE ORO: Solo actualizar si el ID cambió (nueva inserción n8n)
-                if (lastId !== null && data.id === lastId) return;
-
-                // Si es la primera vez o hay ID nuevo (variación >= 2%)
-                const isFirstLoad = lastId === null;
-                lastId = data.id;
-
-                // Actualizar Textos
-                document.getElementById('bcv').innerText = data.precio_bcv;
-                document.getElementById('usdt').innerText = data.precio_usdt;
-                document.getElementById('brecha').innerText = data.brecha_porcentaje;
-                document.getElementById('time').innerText = data.timestamp;
-
-                // Animación de Círculo (Base 534 para r=85)
-                const gapNum = parseFloat(data.brecha_porcentaje.replace(',', '.'));
-                const offset = 534 - (534 * Math.min(gapNum, 30) / 30);
-                document.getElementById('gap-circle').style.strokeDashoffset = offset;
-
-                // Banner y Alerta: Solo si NO es estable/inicializado Y NO es la primera carga
-                const ticker = document.getElementById('ticker-wrap');
-                if (!isFirstLoad && data.status !== 'estable' && data.status !== 'inicializado') {
-                    ticker.style.display = 'block';
-                    alertPing.play();
-                    if (Notification.permission === "granted") {
-                        new Notification("JAIROKOV HOO", { body: `¡Movimiento detectado! Brecha: ${data.brecha_porcentaje}` });
-                    }
-                } else {
-                    ticker.style.display = 'none';
+                // LÓGICA ANTI-FRICCIÓN: Si el ID es igual, el servidor n8n no ha guardado nada nuevo.
+                if (lastId !== null && d.id === lastId) {
+                    console.log("Hoo: Sin cambios del 2%. Silencio.");
+                    return; 
                 }
 
-            } catch (e) { console.error("Sincronizando..."); }
+                // Si llegamos aquí es porque d.id es DIFERENTE o es la primera carga
+                const isUpdate = lastId !== null;
+                lastId = d.id;
+
+                // Actualizar UI
+                document.getElementById('bcv').innerText = d.precio_bcv;
+                document.getElementById('usdt').innerText = d.precio_usdt;
+                document.getElementById('brecha').innerText = d.brecha_porcentaje;
+                
+                // Calcular arco (0 a 251 de offset para el arco de 180 grados)
+                const gapVal = parseFloat(d.brecha_porcentaje.replace(',', '.'));
+                const progress = Math.min(gapVal, 20) / 20; // Máximo 20%
+                document.getElementById('gauge-progress').style.strokeDashoffset = 330 - (251 * progress);
+
+                // Solo pitar y mostrar banner si es una actualización real (no la primera carga)
+                if (isUpdate) {
+                    alertSfx.play().catch(e => console.log("Permite audio"));
+                    document.getElementById('ticker-wrap').style.display = 'block';
+                    if (Notification.permission === "granted") {
+                        new Notification("HOO: Salto del 2%", { body: `Nueva brecha: ${d.brecha_porcentaje}` });
+                    }
+                }
+            } catch (e) { console.log("Buscando señal..."); }
         }
 
-        // Click para activar audio/notificaciones
-        document.body.onclick = () => { Notification.requestPermission(); alertPing.play().catch(()=>{}); };
-
-        setInterval(updateUI, 15000);
-        updateUI();
+        document.body.onclick = () => { alertSfx.play().then(() => alertSfx.pause()); Notification.requestPermission(); };
+        setInterval(updateHoo, 15000); // Consulta cada 15 seg, pero el ID manda.
+        updateHoo();
     </script>
 </body>
 </html>
