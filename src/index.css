@@ -18,20 +18,22 @@
 body {
   @apply bg-[#050608] text-white antialiased;
   font-family: 'Inter', sans-serif;
-  overflow: hidden;
+  overflow: hidden !important;
   height: 100vh;
   width: 100vw;
   position: fixed;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Hide all scrollbars */
+/* Hard scrollbar removal */
 * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 *::-webkit-scrollbar {
-  display: none;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .gold-text {
@@ -117,4 +119,14 @@ body {
 
 .area-gradient {
   @apply fill-[url(#chartGrad)] opacity-20;
+}
+
+/* Eliminate main scroll through forced hiding */
+main {
+  overflow-y: scroll; /* Allow touch scroll but hide bar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+main::-webkit-scrollbar {
+  display: none !important;
 }
