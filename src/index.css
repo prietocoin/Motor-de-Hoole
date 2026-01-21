@@ -19,11 +19,11 @@ body {
 
 .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
 
-/* Scroll invisible para móviles */
+/* Scroll invisible para dispositivos móviles */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Banner Publicitario Superior */
+/* Banner Superior Animado */
 .marketing-banner {
   background: #000;
   border-bottom: 1px solid rgba(226, 176, 83, 0.3);
@@ -52,14 +52,14 @@ body {
   100% { transform: translateX(-100%); }
 }
 
-/* Tarjetas Estilo Glass */
+/* Tarjetas Estilo Glassmorphism Premium */
 .glass-card {
   background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 20px;
 }
 
-/* Animación de Pulso para el Anillo Grueso */
+/* Animación de Pulso para el Anillo Exterior Grueso */
 .animate-pulse-intense {
   animation: pulse-premium 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -75,7 +75,7 @@ body {
   }
 }
 
-/* Medidor Central (Círculo segmentado dorado) */
+/* Configuración del Medidor Central Dorado */
 .gauge-svg {
   filter: drop-shadow(0 0 15px var(--accent-gold-glow));
   transform: rotate(-90deg);
@@ -96,6 +96,7 @@ body {
   transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Línea de Tendencia Dinámica */
 .sparkline {
   fill: none;
   stroke-width: 3;
@@ -103,7 +104,8 @@ body {
   transition: all 0.5s ease;
 }
 
-/* Ajuste de escala para PC/Laptops */
+/* Ajustes de Escala para Pantallas Estándar y PC */
 @media (max-height: 850px) {
-  .gauge-container { transform: scale(0.85); margin: -15px 0; }
+  .gauge-container { transform: scale(0.8); margin: -20px 0; }
+  .news-banner-container { transform: scale(0.95); margin: 0; }
 }
