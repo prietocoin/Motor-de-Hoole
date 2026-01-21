@@ -1,97 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --bg-deep: #050608;
-  --bg-card: #121415;
+  --bg-card: #0d0f12;
   --accent-gold: #e2b053;
   --accent-gold-glow: rgba(226, 176, 83, 0.4);
   --accent-green: #00d49a;
   --accent-red: #ff4b4b;
   --text-dim: #64748b;
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-deep);
-  color: white;
+  @apply bg-[#050608] text-white antialiased;
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   height: 100vh;
+  width: 100vw;
+  position: fixed;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide all scrollbars */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
 }
 
 .gold-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-[#e2b053] to-[#ffb347];
+  filter: drop-shadow(0 0 10px rgba(226, 176, 83, 0.2));
 }
 
 .glass-panel {
-  @apply bg-[#1a1c22]/60 backdrop-blur-2xl border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+  @apply bg-[#0d0f12]/80 backdrop-blur-3xl border border-[var(--glass-border)] rounded-[32px] shadow-2xl;
   position: relative;
   overflow: hidden;
 }
 
-.glass-panel::after {
+.glass-panel::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.neon-border {
+  @apply border border-[#e2b053]/20 shadow-[0_0_15px_rgba(226,176,83,0.1)];
 }
 
 .gauge-background {
-  fill: none;
-  stroke: rgba(255,255,255,0.03);
-  stroke-width: 12;
+  @apply fill-none stroke-white/5;
+  stroke-width: 10;
 }
 
 .gauge-fill {
-  fill: none;
-  stroke: var(--accent-gold);
-  stroke-width: 12;
+  @apply fill-none stroke-[#e2b053];
+  stroke-width: 10;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 12px var(--accent-gold-glow));
+  filter: drop-shadow(0 0 15px rgba(226, 176, 83, 0.5));
   transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-bar {
-  background: rgba(18, 20, 21, 0.95);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  @apply bg-[#0d0f12]/95 backdrop-blur-2xl border-t border-white/5;
+  height: env(safe-area-inset-bottom, 80px);
 }
 
 .nav-item {
-  @apply opacity-30 transition-all duration-300;
+  @apply text-white/20 transition-all duration-300;
 }
 
 .nav-item.active {
-  @apply opacity-100 text-[#e2b053];
-  filter: drop-shadow(0 0 10px rgba(226, 176, 83, 0.4));
+  @apply text-[#e2b053];
+  filter: drop-shadow(0 0 12px rgba(226, 176, 83, 0.4));
+}
+
+.rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+@keyframes slide-in {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
 
 .sparkline-path {
-  fill: none;
-  stroke: var(--accent-gold);
-  stroke-width: 2;
+  @apply fill-none stroke-[#e2b053] stroke-[2.5];
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-@keyframes pulse-glow {
-  0% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-  100% { opacity: 0.5; transform: scale(1); }
-}
-
-.glow-subtle {
-  animation: pulse-glow 3s infinite ease-in-out;
-}
-
-@font-face {
-  font-family: 'Rajdhani';
-  font-display: swap;
+.area-gradient {
+  @apply fill-[url(#chartGrad)] opacity-20;
 }
