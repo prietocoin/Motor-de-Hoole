@@ -1,132 +1,91 @@
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-deep: #050608;
-  --bg-card: #0d0f12;
-  --accent-gold: #e2b053;
-  --accent-gold-glow: rgba(226, 176, 83, 0.4);
-  --accent-green: #00d49a;
-  --accent-red: #ff4b4b;
-  --text-dim: #64748b;
-  --glass-border: rgba(255, 255, 255, 0.08);
+    --gold-primary: #e2b053;
+    --gold-secondary: #ffb347;
+    --dark-bg: #0a0b0d;
+    --panel-bg: rgba(255, 255, 255, 0.03);
+    --border-color: rgba(226, 176, 83, 0.15);
 }
 
 body {
-  @apply bg-[#050608] text-white antialiased;
-  font-family: 'Inter', sans-serif;
-  overflow: hidden !important;
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  -webkit-tap-highlight-color: transparent;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--dark-bg);
+    color: white;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Hard scrollbar removal */
-* {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-.gold-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#e2b053] to-[#ffb347];
-  filter: drop-shadow(0 0 10px rgba(226, 176, 83, 0.2));
+.gold-gradient {
+    background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .glass-panel {
-  @apply bg-[#0d0f12]/80 backdrop-blur-3xl border border-[var(--glass-border)] rounded-[32px] shadow-2xl;
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-}
-
-.neon-border {
-  @apply border border-[#e2b053]/20 shadow-[0_0_15px_rgba(226,176,83,0.1)];
+    background: var(--panel-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
 }
 
 .gauge-background {
-  @apply fill-none stroke-white/5;
-  stroke-width: 10;
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 10;
 }
 
-.gauge-fill {
-  @apply fill-none stroke-[#e2b053];
-  stroke-width: 10;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 15px rgba(226, 176, 83, 0.5));
-  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+.gauge-progress {
+    fill: none;
+    stroke: var(--gold-primary);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease-in-out, stroke 0.5s;
+    filter: drop-shadow(0 0 8px rgba(226, 176, 83, 0.5));
 }
 
-.nav-bar {
-  @apply bg-[#0d0f12]/95 backdrop-blur-2xl border-t border-white/5;
-  height: env(safe-area-inset-bottom, 80px);
+@keyframes pulse-gold {
+    0% {
+        box-shadow: 0 0 0 0 rgba(226, 176, 83, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(226, 176, 83, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(226, 176, 83, 0);
+    }
 }
 
-.nav-item {
-  @apply text-white/20 transition-all duration-300;
+.btn-pulse {
+    animation: pulse-gold 2s infinite;
 }
 
-.nav-item.active {
-  @apply text-[#e2b053];
-  filter: drop-shadow(0 0 12px rgba(226, 176, 83, 0.4));
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.rajdhani {
-  font-family: 'Rajdhani', sans-serif;
+.danger-banner {
+    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-@keyframes slide-in {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+/* Ocultar barra de scroll */
+::-webkit-scrollbar {
+    display: none;
 }
 
-.animate-slide-in {
-  animation: slide-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.sparkline-path {
-  @apply fill-none stroke-[#e2b053] stroke-[2.5];
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.area-gradient {
-  @apply fill-[url(#chartGrad)] opacity-20;
-}
-
-/* Eliminate main scroll through forced hiding */
-main {
-  overflow-y: scroll; /* Allow touch scroll but hide bar */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-main::-webkit-scrollbar {
-  display: none !important;
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
