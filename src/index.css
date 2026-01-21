@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent-gold: #e2b053;
+  --bg-deep: #050608;
+}
+
+body {
+  @apply bg-[#121418] text-white antialiased overflow-hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+.gold-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#e2b053] to-[#ffb347];
+}
+
+.glass-panel {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl;
+}
+
+.gauge-background {
+  @apply fill-none stroke-white/5;
+  stroke-width: 12;
+}
+
+.gauge-fill {
+  @apply fill-none stroke-[#e2b053];
+  stroke-width: 12;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(226, 176, 83, 0.5));
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-bar {
+  @apply bg-[#181a1f]/80 backdrop-blur-2xl border-t border-white/5;
+}
+
+.nav-item {
+  @apply text-white/30 transition-all duration-300;
+}
+
+.nav-item.active {
+  @apply text-[#e2b053];
+  filter: drop-shadow(0 0 12px rgba(226, 176, 83, 0.3));
+}
+
+.sparkline-path {
+  @apply fill-none stroke-[#e2b053] stroke-[2];
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.area-gradient {
+  @apply fill-[url(#chartGradient)] opacity-20;
+}

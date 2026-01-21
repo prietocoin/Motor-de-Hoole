@@ -1,14 +1,21 @@
 /* 
-   HOO MASTER BACKEND V6.4 - VERSIÓN INDESTRUCTIBLE
-   - Restaura el acceso al sitio (Sirve el frontend desde /dist).
-   - Registra todos los campos: brecha_bs, precio_eur, categoria.
-   - Detiene la divagación del monitor (Filtro Inteligente para n8n).
+   HOO MASTER BACKEND V6.6 - VERSIÓN ESM BLINDADA
+   - Suministra el Frontend desde /dist (Fix Not Found).
+   - Soporta filtros de categoría para n8n.
+   - Registra Brecha BS y Alertas.
 */
 
-const express = require('express');
-const { Pool } = require('pg');
-const cors = require('cors');
-const path = require('path');
+import express from 'express';
+import pkg from 'pg';
+const { Pool } = pkg;
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+// Configuración de __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,9 +29,36 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
-// 1. SERVIR EL FRONTEND (Soluciona el error "Cannot GET /")
-// IMPORTANTE: Asegúrate de que tu carpeta de build se llame 'dist'
+// 1. SERVIR EL FRONTEND (Soluciona el error "Not Found")
+console.log('Ruta estática:', path.join(__dirname, 'dist'));
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// Ruta de Salud para diagnóstico
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'UP',
+        dirname: __dirname,
+        time: new Date().toISOString()
+    });
+});
+
+// Ruta de Depuración de Archivos (Para ver qué hay en Render)
+app.get('/debug-files', (req, res) => {
+    try {
+        const distPath = path.join(__dirname, 'dist');
+        const exists = fs.existsSync(distPath);
+        const files = exists ? fs.readdirSync(distPath) : 'LA CARPETA dist NO EXISTE';
+        res.json({
+            currentDir: __dirname,
+            distPath: distPath,
+            distExists: exists,
+            distFiles: files,
+            rootFiles: fs.readdirSync(__dirname)
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
 
 // 2. ENDPOINT PARA n8n (Guardar Datos)
 app.post('/api/update-prices', async (req, res) => {
@@ -49,12 +83,12 @@ app.post('/api/update-prices', async (req, res) => {
 
         res.json({ message: 'Sincronización exitosa 🦉' });
     } catch (error) {
-        console.error('Error insertando en DB:', error);
+        console.error('Error DB:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
-// 3. ENDPOINT INTELIGENTE (Filtro por Categoría para n8n)
+// 3. ENDPOINT INTELIGENTE (Escucha filtros de n8n)
 app.get('/precio-actual', async (req, res) => {
     const { categoria } = req.query;
     try {
@@ -62,20 +96,26 @@ app.get('/precio-actual', async (req, res) => {
         if (categoria === 'eq.comparar') {
             sql += "WHERE categoria = 'comparar' ";
         }
-        sql += 'ORDER BY id DESC LIMIT 1';
+        const querySuffix = 'ORDER BY id DESC LIMIT 1';
 
-        const result = await pool.query(sql);
+        const result = await pool.query(sql + querySuffix);
         res.json(result.rows[0] || {});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// 4. FALLBACK PARA FRONTEND (Asegura que el sitio siempre cargue al refrescar)
+// 4. FALLBACK PARA FRONTEND (Asegura ruteo interno)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            console.error('Error enviando index.html:', err);
+            res.status(404).send('HOO Error: El archivo index.html no existe en el servidor. Verifica el Build en Render.');
+        }
+    });
 });
 
 app.listen(port, '0.0.0.0', () => {
-    console.log(`🚀 HOO Smart System V6.4 activo en el puerto ${port}`);
+    console.log(`🚀 HOO Smart System V6.6 (ESM) activo en puerto ${port}`);
 });
