@@ -36,23 +36,22 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* Evita scroll global para que encaje como App */
         }
         .font-rajdhani {
             font-family: 'Rajdhani', sans-serif;
         }
 
-        /* Contenedor Superior del Banner - Ajustado para visibilidad total */
+        /* Banner de Marketing: Forzado para visibilidad */
         .marketing-banner {
             background: #000;
             border-bottom: 1px solid rgba(226, 176, 83, 0.3);
-            height: 35px;
+            height: 30px;
             width: 100%;
             display: flex;
             align-items: center;
             overflow: hidden;
-            position: relative;
-            flex-shrink: 0; /* Evita que se colapse */
+            flex-shrink: 0; /* IMPRESCINDIBLE: evita que el contenido lo oculte */
             z-index: 100;
         }
         .marketing-content {
@@ -60,7 +59,7 @@
             display: inline-block;
             animation: moveBanner 45s linear infinite;
             color: var(--accent-gold);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -70,16 +69,29 @@
             100% { transform: translateX(-100%); }
         }
 
+        /* Contenedor Principal Ajustado para que quepa todo */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            padding-bottom: 1rem;
+            justify-content: space-between; /* Distribuye espacio proporcionalmente */
+            overflow: hidden;
+        }
+
         .gauge-container {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px 0;
+            padding: 10px 0;
+            flex-shrink: 0;
         }
         .gauge-svg {
             filter: drop-shadow(0 0 15px var(--accent-gold-glow));
-            transform: rotate(-90deg);
+            transform: rotate(-90deg) scale(0.9); /* Ligeramente más pequeño para PC */
         }
         .gauge-segment-bg {
             fill: none;
@@ -112,15 +124,15 @@
         /* Alerta Flotante */
         #alert-notification {
             position: fixed;
-            top: 35px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(90deg, #ff4b4b, #8b0000);
             color: white;
-            padding: 6px 20px;
-            font-size: 10px;
+            padding: 4px 15px;
+            font-size: 9px;
             font-weight: 900;
-            border-radius: 0 0 12px 12px;
+            border-radius: 0 0 10px 10px;
             z-index: 200;
             display: none;
             text-transform: uppercase;
@@ -133,9 +145,12 @@
             to { transform: translate(-50%, 0); }
         }
 
-        @media (max-height: 700px) {
-            .gauge-container { transform: scale(0.85); padding: 5px 0; }
-            .cards-container { margin-top: -20px !important; }
+        /* Ajustes de escala para pantallas pequeñas o resoluciones estándar */
+        @media (max-height: 850px) {
+            .gauge-container { transform: scale(0.8); padding: 0; margin: -10px 0; }
+            .cards-container { gap: 0.5rem; margin-top: 0 !important; }
+            .glass-card { padding: 0.75rem !important; }
+            header { pt: 2 !important; }
         }
     </style>
 </head>
@@ -160,13 +175,13 @@
         </div>
     </div>
 
-    <div id="alert-notification">⚠️ ALERTA: TENDENCIA VOLÁTIL DETECTADA</div>
+    <div id="alert-notification">⚠️ ALERTA: TENDENCIA VOLÁTIL</div>
 
-    <div class="flex-1 flex flex-col container mx-auto max-w-lg px-6 overflow-y-auto">
-        <header class="pt-6 flex justify-between items-start">
+    <div class="main-container container mx-auto max-w-lg">
+        <header class="pt-4 flex justify-between items-start">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 glass-card flex items-center justify-center border-white/5 shadow-xl">
-                    <svg width="24" height="24" viewBox="0 0 100 100">
+                <div class="w-10 h-10 glass-card flex items-center justify-center border-white/5 shadow-xl">
+                    <svg width="22" height="22" viewBox="0 0 100 100">
                         <polyline points="20,35 50,55 80,35" fill="none" stroke="var(--accent-gold)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
                         <circle cx="35" cy="50" r="10" fill="white" />
                         <circle cx="65" cy="50" r="10" fill="white" />
@@ -176,73 +191,73 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="font-rajdhani text-2xl font-bold tracking-widest text-white leading-none"><span class="gold-h">H</span>OO</h2>
-                    <p class="text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mt-1.5">DÓLAR MONITOR</p>
+                    <h2 class="font-rajdhani text-xl font-bold tracking-widest text-white leading-none"><span class="gold-h">H</span>OO</h2>
+                    <p class="text-[7px] text-white/40 font-black uppercase tracking-[0.2em] mt-1">DÓLAR MONITOR</p>
                 </div>
             </div>
             <div class="flex gap-2">
-                <button onclick="toggleMute()" id="muteBtn" class="w-10 h-10 glass-card flex items-center justify-center text-white/30"><i data-lucide="volume-2" class="w-4 h-4"></i></button>
-                <button onclick="sync()" class="w-10 h-10 glass-card flex items-center justify-center text-white/30"><i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i></button>
+                <button onclick="toggleMute()" id="muteBtn" class="w-9 h-9 glass-card flex items-center justify-center text-white/30"><i data-lucide="volume-2" class="w-4 h-4"></i></button>
+                <button onclick="sync()" class="w-9 h-9 glass-card flex items-center justify-center text-white/30"><i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i></button>
             </div>
         </header>
 
         <div class="gauge-container">
-            <svg width="210" height="210" viewBox="0 0 160 160" class="gauge-svg">
+            <svg width="190" height="190" viewBox="0 0 160 160" class="gauge-svg">
                 <circle class="gauge-segment-bg" cx="80" cy="80" r="70" />
                 <circle id="gauge-arc" class="gauge-segment-progress" cx="80" cy="80" r="70" />
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span style="font-size: 8px; color: var(--accent-gold); font-weight: 800; letter-spacing: 2px; margin-bottom: 5px; opacity: 0.6;">DIFERENCIAL</span>
-                <span id="brecha-porc" class="font-rajdhani text-5xl font-extrabold tracking-tighter leading-none">--%</span>
-                <div class="mt-6 flex flex-col items-center pt-2 border-t border-white/10 w-32">
-                    <span id="brecha-bs" class="text-sm font-bold text-white/90">Bs. --,--</span>
-                    <span style="font-size: 7px; color: white; opacity: 0.2; font-weight: 900; letter-spacing: 2px; margin-top: 4px;">BRECHA NETA</span>
+                <span style="font-size: 7px; color: var(--accent-gold); font-weight: 800; letter-spacing: 2px; margin-bottom: 2px; opacity: 0.6;">DIFERENCIAL</span>
+                <span id="brecha-porc" class="font-rajdhani text-4xl font-extrabold tracking-tighter leading-none">--%</span>
+                <div class="mt-4 flex flex-col items-center pt-2 border-t border-white/10 w-24">
+                    <span id="brecha-bs" class="text-xs font-bold text-white/90">Bs. --,--</span>
+                    <span style="font-size: 6px; color: white; opacity: 0.2; font-weight: 900; letter-spacing: 2px; mt-1">BRECHA NETA</span>
                 </div>
             </div>
         </div>
 
-        <div class="cards-container grid grid-cols-2 gap-4 mt-2">
-            <div class="glass-card p-5">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-[8px] font-bold text-white/30 tracking-widest uppercase">BINANCE P2P</span>
-                    <span id="var-usdt" class="text-[8px] font-black text-green-500">+0.00%</span>
+        <div class="cards-container grid grid-cols-2 gap-3">
+            <div class="glass-card p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[7px] font-bold text-white/30 tracking-widest uppercase">BINANCE P2P</span>
+                    <span id="var-usdt" class="text-[7px] font-black text-green-500">+0.00%</span>
                 </div>
-                <h3 id="usdt" class="font-rajdhani text-3xl font-bold">--,--</h3>
-                <p class="text-[7px] text-white/20 mt-1">VES / USDT</p>
-                <div class="h-6 mt-3"><svg viewBox="0 0 100 20" class="w-full h-full"><path class="sparkline" d="M0,15 Q20,5 40,15 T70,5 T100,10" /></svg></div>
+                <h3 id="usdt" class="font-rajdhani text-2xl font-bold">--,--</h3>
+                <p class="text-[6px] text-white/20">VES / USDT</p>
+                <div class="h-4 mt-2"><svg viewBox="0 0 100 20" class="w-full h-full"><path class="sparkline" d="M0,15 Q20,5 40,15 T70,5 T100,10" /></svg></div>
             </div>
-            <div class="glass-card p-5">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-[8px] font-bold text-white/30 tracking-widest uppercase">OFICIAL BCV</span>
-                    <span class="text-[8px] font-black text-white/40">+0.00%</span>
+            <div class="glass-card p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[7px] font-bold text-white/30 tracking-widest uppercase">OFICIAL BCV</span>
+                    <span class="text-[7px] font-black text-white/40">+0.00%</span>
                 </div>
-                <h3 id="bcv" class="font-rajdhani text-3xl font-bold text-white/80">--,--</h3>
-                <p class="text-[7px] text-white/20 mt-1">VES / BCV</p>
-                <div class="h-6 mt-3"><svg viewBox="0 0 100 20" class="w-full h-full"><path class="sparkline" stroke="var(--text-dim)" d="M0,10 Q50,10 100,10" /></svg></div>
+                <h3 id="bcv" class="font-rajdhani text-2xl font-bold text-white/80">--,--</h3>
+                <p class="text-[6px] text-white/20">VES / BCV</p>
+                <div class="h-4 mt-2"><svg viewBox="0 0 100 20" class="w-full h-full"><path class="sparkline" stroke="var(--text-dim)" d="M0,10 Q50,10 100,10" /></svg></div>
             </div>
-            <div class="glass-card p-4 col-span-2 flex justify-between items-center bg-[#181a1b]">
+            <div class="glass-card p-3 col-span-2 flex justify-between items-center bg-[#181a1b]">
                 <div class="flex flex-col">
-                    <span class="text-[7px] font-black text-[#e2b053]/60 uppercase tracking-[2px]">Tasa Euro Oficial</span>
-                    <span id="eur" class="font-rajdhani text-xl font-bold gold-h">--,-- Bs.</span>
+                    <span class="text-[6px] font-black text-[#e2b053]/60 uppercase tracking-[2px]">Tasa Euro Oficial</span>
+                    <span id="eur" class="font-rajdhani text-lg font-bold gold-h">--,-- Bs.</span>
                 </div>
-                <div class="py-1 px-3 glass-card text-[7px] font-black tracking-[1px] border-[#e2b053]/20 uppercase">Ancla Diaria</div>
+                <div class="py-1 px-3 glass-card text-[6px] font-black tracking-[1px] border-[#e2b053]/20 uppercase">Ancla Diaria</div>
             </div>
         </div>
 
-        <div class="mt-6 glass-card p-4 flex items-center justify-between border-white/5">
+        <div class="mt-4 glass-card p-3 flex items-center justify-between border-white/5">
             <div class="flex flex-col">
-                <span class="text-[7px] text-white/30 font-bold tracking-[2px] uppercase mb-1">SISTEMA ELITE</span>
-                <span class="font-rajdhani text-sm font-bold tracking-[2px]">@JAIROKOV</span>
+                <span class="text-[6px] text-white/30 font-bold tracking-[2px] uppercase">SISTEMA ELITE</span>
+                <span class="font-rajdhani text-xs font-bold tracking-[2px]">@JAIROKOV</span>
             </div>
             <div class="flex gap-4">
-                <a href="https://instagram.com/jairokov" target="_blank" class="text-white/40 hover:text-white"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                <a href="https://t.me/jairokov" target="_blank" class="text-white/40 hover:text-white"><i data-lucide="send" class="w-4 h-4"></i></a>
-                <a href="https://x.com/jairokov" target="_blank" class="text-white/40 hover:text-white"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                <a href="https://instagram.com/jairokov" target="_blank" class="text-white/40"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                <a href="https://t.me/jairokov" target="_blank" class="text-white/40"><i data-lucide="send" class="w-4 h-4"></i></a>
+                <a href="https://x.com/jairokov" target="_blank" class="text-white/40"><i data-lucide="twitter" class="w-4 h-4"></i></a>
             </div>
         </div>
 
-        <div class="mt-auto py-6 text-center">
-            <p class="text-[8px] text-white/10 font-black uppercase tracking-[0.4em]">PROPIEDAD DE <span class="gold-h">JAIROKOV SYSTEMS</span> © 2026</p>
+        <div class="py-2 text-center">
+            <p class="text-[7px] text-white/10 font-black uppercase tracking-[0.4em]">PROPIEDAD DE <span class="gold-h">JAIROKOV SYSTEMS</span> © 2026</p>
         </div>
     </div>
 
