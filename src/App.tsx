@@ -30,13 +30,14 @@ export default function App() {
     try {
       setLoading(true);
       const response = await fetch('/precio-actual');
+      let result;
 
       if (!response.ok) {
         const altResponse = await fetch('/api/market-data');
         if (!altResponse.ok) throw new Error("API Offline");
-        var result = await altResponse.json();
+        result = await altResponse.json();
       } else {
-        var result = await response.json();
+        result = await response.json();
       }
 
       const d = Array.isArray(result) ? result[0] : (result.analisis || result);
