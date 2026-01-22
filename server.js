@@ -1,7 +1,6 @@
-/* 
-   HOO MASTER BACKEND V6.7 - CATEGORY FILTERING FIX
-   - Fuerza filtro categoria = 'monitor' por defecto en /precio-actual.
-   - Soporta eq.comparar específicamente para n8n trends.
+/* HOO MASTER BACKEND V6.8 - MULTI-CURRENCY SUPPORT
+    - Filtro categoria 'monitor' por defecto.
+    - Nueva ruta /global-rates conectada a Supabase vía Pool.
 */
 
 import express from 'express';
@@ -10,13 +9,13 @@ const { Pool } = pkg;
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Configuración de conexión (Supabase usa DATABASE_URL)
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
@@ -26,12 +25,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Endpoint /health
+// Endpoint de salud
 app.get('/health', (req, res) => {
     res.json({ status: 'UP', time: new Date().toISOString() });
 });
 
-// Endpoint /api/update-prices
+// Endpoint para recibir datos de n8n (Dólar Venezuela)
 app.post('/api/update-prices', async (req, res) => {
     const {
         precio_bcv, precio_usdt, precio_eur, brecha_bs,
@@ -57,17 +56,14 @@ app.post('/api/update-prices', async (req, res) => {
     }
 });
 
-// Endpoint /precio-actual (CORREGIDO)
+// Endpoint para que la web lea el Dólar Venezuela
 app.get('/precio-actual', async (req, res) => {
     const { categoria } = req.query;
     try {
-        // Blindaje: Por defecto solo mostramos la categoría 'monitor'
         let sql = "SELECT * FROM market_data WHERE categoria = 'monitor' ";
-        
         if (categoria === 'eq.comparar') {
             sql = "SELECT * FROM market_data WHERE categoria = 'comparar' ";
         }
-        
         const querySuffix = 'ORDER BY id DESC LIMIT 1';
         const result = await pool.query(sql + querySuffix);
         res.json(result.rows[0] || {});
@@ -75,25 +71,29 @@ app.get('/precio-actual', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// Ruta igual a la de precio-actual
-app.get('/global-rates', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('global_rates') // Nombre de la tabla en Supabase
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1);
 
-    if (error) throw error;
-    res.json(data); // Envía los datos a la web
-  } catch (error) {
-    res.status(500).send('Error');
-  }
+// ==========================================
+// NUEVA RUTA CORREGIDA: /global-rates
+// ==========================================
+app.get('/global-rates', async (req, res) => {
+    try {
+        // Consultamos la tabla global_rates usando el Pool (no Supabase JS)
+        // Traemos la última fila insertada por n8n
+        const result = await pool.query("SELECT * FROM global_rates ORDER BY created_at DESC LIMIT 1");
+        
+        // Enviamos la lista de resultados a la web
+        res.json(result.rows); 
+    } catch (err) {
+        console.error("Error en global-rates:", err.message);
+        res.status(500).json({ error: "Error al leer tasas globales" });
+    }
 });
+
+// Servir el frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(port, '0.0.0.0', () => {
-    console.log(`🚀 HOO Smart System V6.7 activo en ${port}`);
+    console.log(`🚀 HOO Smart System V6.8 activo en ${port}`);
 });
