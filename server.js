@@ -75,7 +75,21 @@ app.get('/precio-actual', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+// Ruta igual a la de precio-actual
+app.get('/global-rates', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('global_rates') // Nombre de la tabla en Supabase
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1);
 
+    if (error) throw error;
+    res.json(data); // Envía los datos a la web
+  } catch (error) {
+    res.status(500).send('Error');
+  }
+});
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
