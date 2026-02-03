@@ -76,7 +76,7 @@ export default function App() {
   const handleShare = async () => {
     const text = activeTab === 'home' 
       ? `📊 *HOO MONITOR BETA*\n💵 Binance: ${data?.precio_usdt}\n🏦 BCV: ${data?.precio_bcv}\n📉 Tendencia: ${data?.variacion_mercado}`
-      : `🌍 *TASAS P2P*\n\n${globalRates.map(c => `🔹 *${c.name}:* ${c.price}`).join('\n')}`;
+      : `🌍 *El Promedio es*\n\n${globalRates.map(c => `${c.name}: ${c.price}`).join('\n')}`;
     if (navigator.share) await navigator.share({ title: 'HOO Monitor', text, url: window.location.href });
   };
 
